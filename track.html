@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="output.css">
+    <script src="https://kit.fontawesome.com/e5ff2f4c45.js" crossorigin="anonymous"></script>
+    <title>Tracking App</title>
+</head>
+<body class="m-4">
+    <div class="flex justify-between">
+        <input class="ring-2 ring-black p-1 basis-8/12 mr-1" type="text" placeholder="Title..."/>
+
+        <input class="timerInput text-slate-300 outline-0 text-center text-2xl" type="text" value="00:00:00" readonly/>
+        
+        <div class="rounded-full start">
+            <button class="">
+                <i class="fa-solid fa-play bg-slate-300 p-3 rounded-full"></i>
+            </button>
+        </div>
+
+        <div class="hidden stop">
+            <button class="">
+                <i class="fa-solid fa-stop bg-slate-300 p-3 rounded-full"></i>
+            </button>
+        </div>
+    </div>
+
+    <select class="ring-2 ring-black p-1 w-full mt-6 mb-2 py-2">
+        <option value="">Category</option>
+    </select>
+
+    <select class="ring-2 ring-black p-1 w-full my-4 py-2">
+        <option value="">Project Name</option>
+    </select>
+
+    <div class="border-b-2 mt-4 mb-16"></div>
+
+    <div class="float-right">
+        <button><i class="fa-solid fa-table-columns"></i></button>
+        <button><i class="fa-solid fa-file-pen"></i></button>
+    </div>
+
+    <div class="flex justify-center">
+        <p>Weekly Total</p>
+
+        <input class="weeklyTotal text-slate-300 outline-0 text-center" type="text" value="00:00:00" readonly/>
+    </div>
+</body>
+
+<script src="track.js"></script>
+</html>
