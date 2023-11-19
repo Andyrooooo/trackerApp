@@ -18,7 +18,7 @@ async function grabCategories() {
         categoryOption.innerText = category.categoryName
         categorySelect.appendChild(categoryOption)
     })
-    console.log(categoryData)
+    // console.log(categoryData)
 }
 grabCategories()
 
@@ -34,7 +34,7 @@ async function grabProjects() {
         projectOption.innerText = project.projectName
         projectSelect.appendChild(projectOption)
     })
-    console.log(projectData)
+    // console.log(projectData)
 }
 grabProjects()
 
@@ -94,6 +94,9 @@ stopButton.addEventListener('click', async (e) => {
     startButton.classList.remove('hidden')
     timerInput.classList.add('text-slate-300')
 
+    let selectedProjectName = projectSelect.options[projectSelect.selectedIndex].text
+    let selectedCategoryName = categorySelect.options[categorySelect.selectedIndex].text
+
     let newEntry = {
         entryTitle: inputTitle.value,
         entryDate: new Date(),
@@ -110,32 +113,32 @@ stopButton.addEventListener('click', async (e) => {
         body: JSON.stringify(newEntry)
     })
     .then(() => {
-        createNewEntry(newEntry)
+        createNewEntry(newEntry, selectedProjectName, selectedCategoryName)
     })
 })
 
-function createNewEntry(newEntry) {
+function createNewEntry(newEntry, projectName, categoryName) {
     // console.log(entryData)
     let entryListItem = document.createElement("li")
     // This will be the project type of the entry
     let entryProjectName = document.createElement("p")
-    entryProjectName.value = projectSelect.value
-    entryProjectName.innerText = projectSelect.value
+    entryProjectName.value = newEntry.entryProject
+    entryProjectName.innerText = (projectName === 'Project Name') ? '' : projectName
 
     // this will be the category of the entry
     let entryCategoryName = document.createElement("p")
-    entryCategoryName.value = categorySelect.value
-    entryCategoryName.innerText = categorySelect.value
+    entryCategoryName.value = newEntry.entryCategory
+    entryCategoryName.innerText = (categoryName === 'Category') ? '' : categoryName
 
     // this will be the title of the entry
     let entryTitleName = document.createElement("p")
-    entryTitleName.value = inputTitle.value
-    entryTitleName.innerText = inputTitle.value
+    entryTitleName.value = newEntry.entryTitle
+    entryTitleName.innerText = newEntry.entryTitle
 
     // this will display the amounted time of the entry
     let entryTimeNumber = document.createElement("p")
-    entryTimeNumber.value = timerInput.value
-    entryTimeNumber.innerText = timerInput.value
+    entryTimeNumber.value = newEntry.entryTime
+    entryTimeNumber.innerText = newEntry.entryTime
 
     entryListItem.appendChild(entryProjectName)
     entryListItem.appendChild(entryCategoryName)
@@ -148,55 +151,5 @@ function createNewEntry(newEntry) {
     categorySelect.value = ''
     timerInput.value = '00:00:00'
     seconds = 0
+    console.log(newEntry)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// async function grabEntries() {
-//     let response = await fetch('http://localhost:5500/entries') 
-//     let entryData = await response.json()
-//     console.log(entryData)
-
-    
-//     entryData.forEach(entry => {
-//         let entryListItem = document.createElement("li")
-//         // This will be the project type of the entry
-//         let entryProjectName = document.createElement("p")
-//         entryProjectName.value = entry.entryProject
-//         entryProjectName.innerText = entry.entryProject
-
-//         // this will be the category of the entry
-//         let entryCategoryName = document.createElement("p")
-//         entryCategoryName.value = entry.entryCategory
-//         entryCategoryName.innerText = entry.entryCategory
-
-//         // this will be the title of the entry
-//         let entryTitleName = document.createElement("p")
-//         entryTitleName.value = entry.entryTitle
-//         entryTitleName.innerText = entry.entryTitle
-
-//         // this will display the amounted time of the entry
-//         let entryTimeNumber = document.createElement("p")
-//         entryTimeNumber.value = entry.entryTime
-//         entryTimeNumber.innerText = entry.entryTime
-
-//         entryListItem.appendChild(entryProjectName)
-//         entryListItem.appendChild(entryCategoryName)
-//         entryListItem.appendChild(entryTitleName)
-//         entryListItem.appendChild(entryTimeNumber)
-//         displayEntries.appendChild(entryListItem)
-//     })
-// }
-
-// grabEntries()
