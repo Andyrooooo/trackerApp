@@ -1,7 +1,45 @@
 let startButton = document.querySelector('.start')
 let stopButton = document.querySelector('.stop')
 let timerInput = document.querySelector('.timerInput')
+let displayEntries = document.querySelector('.displayEntries')
+let categorySelect = document.querySelector('.categorySelect')
+let projectSelect = document.querySelector('.projectSelect')
+let inputTitle = document.querySelector('.inputTitle')
 
+
+/* -------------------------- category options ---------------------------  */
+async function grabCategories() {
+    let response = await fetch('http://localhost:5500/categories')
+    let categoryData = await response.json()
+
+    categoryData.forEach(category => {
+        let categoryOption = document.createElement("option")
+        categoryOption.value = category.categoryID
+        categoryOption.innerText = category.categoryName
+        categorySelect.appendChild(categoryOption)
+    })
+    console.log(categoryData)
+}
+grabCategories()
+
+
+/* -------------------------- project name options ---------------------------  */
+async function grabProjects() {
+    let response = await fetch('http://localhost:5500/projects')
+    let projectData = await response.json()
+
+    projectData.forEach(project => {
+        let projectOption = document.createElement("option")
+        projectOption.value = project.projectID
+        projectOption.innerText = project.projectName
+        projectSelect.appendChild(projectOption)
+    })
+    console.log(projectData)
+}
+grabProjects()
+
+
+/* -------------------- Functions to get play and timer to work ------------- */
 let timerInterval
 let seconds = 0
 
@@ -42,11 +80,123 @@ function formatTime(totalSeconds) {
 function colons(number) {
     return (number < 10 ? '0' : '') + number
 }
+/* ------------------ end of play and timer functions ---------------------- */
+
+
+
 
 // stops the timer when the stop button is clicked and we also hide the stop button after
-stopButton.addEventListener('click', () => {
+stopButton.addEventListener('click', async (e) => {
+    e.preventDefault()
+
     clearInterval(timerInterval)
     stopButton.classList.add('hidden')
     startButton.classList.remove('hidden')
     timerInput.classList.add('text-slate-300')
+
+    let newEntry = {
+        entryTitle: inputTitle.value,
+        entryDate: new Date(),
+        entryProject: projectSelect.value,
+        entryCategory: categorySelect.value,
+        entryTime: timerInput.value,
+    }
+
+    fetch('http://localhost:5500/entry', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newEntry)
+    })
+    .then(() => {
+        createNewEntry(newEntry)
+    })
 })
+
+function createNewEntry(newEntry) {
+    // console.log(entryData)
+    let entryListItem = document.createElement("li")
+    // This will be the project type of the entry
+    let entryProjectName = document.createElement("p")
+    entryProjectName.value = projectSelect.value
+    entryProjectName.innerText = projectSelect.value
+
+    // this will be the category of the entry
+    let entryCategoryName = document.createElement("p")
+    entryCategoryName.value = categorySelect.value
+    entryCategoryName.innerText = categorySelect.value
+
+    // this will be the title of the entry
+    let entryTitleName = document.createElement("p")
+    entryTitleName.value = inputTitle.value
+    entryTitleName.innerText = inputTitle.value
+
+    // this will display the amounted time of the entry
+    let entryTimeNumber = document.createElement("p")
+    entryTimeNumber.value = timerInput.value
+    entryTimeNumber.innerText = timerInput.value
+
+    entryListItem.appendChild(entryProjectName)
+    entryListItem.appendChild(entryCategoryName)
+    entryListItem.appendChild(entryTitleName)
+    entryListItem.appendChild(entryTimeNumber)
+    displayEntries.appendChild(entryListItem)
+
+    inputTitle.value = ''
+    projectSelect.value = ''
+    categorySelect.value = ''
+    timerInput.value = '00:00:00'
+    seconds = 0
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// async function grabEntries() {
+//     let response = await fetch('http://localhost:5500/entries') 
+//     let entryData = await response.json()
+//     console.log(entryData)
+
+    
+//     entryData.forEach(entry => {
+//         let entryListItem = document.createElement("li")
+//         // This will be the project type of the entry
+//         let entryProjectName = document.createElement("p")
+//         entryProjectName.value = entry.entryProject
+//         entryProjectName.innerText = entry.entryProject
+
+//         // this will be the category of the entry
+//         let entryCategoryName = document.createElement("p")
+//         entryCategoryName.value = entry.entryCategory
+//         entryCategoryName.innerText = entry.entryCategory
+
+//         // this will be the title of the entry
+//         let entryTitleName = document.createElement("p")
+//         entryTitleName.value = entry.entryTitle
+//         entryTitleName.innerText = entry.entryTitle
+
+//         // this will display the amounted time of the entry
+//         let entryTimeNumber = document.createElement("p")
+//         entryTimeNumber.value = entry.entryTime
+//         entryTimeNumber.innerText = entry.entryTime
+
+//         entryListItem.appendChild(entryProjectName)
+//         entryListItem.appendChild(entryCategoryName)
+//         entryListItem.appendChild(entryTitleName)
+//         entryListItem.appendChild(entryTimeNumber)
+//         displayEntries.appendChild(entryListItem)
+//     })
+// }
+
+// grabEntries()

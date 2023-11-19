@@ -8,16 +8,7 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-let entries = [
-    { 
-        entryID: 1, 
-        entryTitle: 'Worked on svelte component',
-        entryDate: '2023-11-17',
-        entryProject: 1,
-        entryCategory: 1,
-        entryTime: '00:01:23', 
-    }
-]
+let entries = []
 
 let categories = [
     { 
@@ -41,9 +32,39 @@ let projects = [
     },
 ]
 
+// Get all entries, categories, and project names
 app.get('/entries', (req, res) => {
     res.send(entries)
     console.log("its working")
+})
+
+app.get('/categories', (req, res) => {
+    res.send(categories)
+    console.log("its working")
+})
+
+app.get('/projects', (req, res) => {
+    res.send(projects)
+    console.log("its working")
+})
+
+
+// Post request to add new entry
+app.post('/entry', (req, res) => {
+    let newEntryID = entries.length === 0 ? 1 : entries.at(-1).entryID + 1
+
+    let newEntry = {
+        entryID: newEntryID,
+        entryTitle: req.body.entryTitle,
+        entryDate: req.body.entryDate,
+        entryProject: req.body.entryProject,
+        entryCategory: req.body.entryCategory,
+        entryTime: req.body.entryTime,
+    }
+
+    entries = [...entries, newEntry]
+    res.send(entries)
+    console.log(entries)
 })
 
 app.listen(port, () => {
