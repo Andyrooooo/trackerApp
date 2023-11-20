@@ -2,13 +2,22 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const app = express()
-const port = 5500
+const port = 5501
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-let entries = []
+let entries = [
+    // {
+    //     entryID: 1,
+    //     entryTitle: 'DGM3770',
+    //     entryDate: '2023-10-20',
+    //     entryProject: '1',
+    //     entryCategory: '1',
+    //     entryTime: '00:01:00',
+    // },
+]
 
 let categories = [
     { 
