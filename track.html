@@ -41,15 +41,80 @@
 
     <div class="border-b-2 mt-4 mb-16"></div>
 
+
     <!-- category and project name edit buttons -->
     <div class="float-right">
-        <button><i class="fa-solid fa-table-columns"></i></button>
-        <button><i class="fa-solid fa-file-pen"></i></button>
+        <label for="Category Button" class="text-sm">Categories</label>
+        <button><i class="fa-solid fa-table-columns categories static"></i></button>
+
+        <div class="categoriesContainer absolute z-10 w-full right-0 hidden">
+
+            <div class="InnerCategoriesContainer bg-slate-100 ring-2 mx-4 mt-4 p-4  mb-4">
+                <h2 class="font-bold uppercase text-center">Categories</h2>
+
+                <!-- add -->
+                <form class="addCategoryForm flex flex-wrap justify-between">
+                    <div class="basis-full">
+                        <p class="text-sm">Add a Category</p>
+                    </div>
+                    
+                    <div class="basis-10/12">
+                        <input class="addCategory border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Category Name..."/>
+                    </div>
+
+                    <div class="basis-1/12">
+                        <input class="addCategoryButton" type="submit" value="Add"/>
+                    </div>
+                </form>
+
+                <!-- delete -->
+                <form class="deleteCategoryForm flex flex-wrap justify-between">
+                    <div class="basis-full">
+                        <p class="text-sm">Delete a Category</p>
+                    </div>
+                    
+                    <div class="basis-10/12">
+                        <select class="deleteCategorySelect border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
+                            <option value="">Categories</option>
+                        </select>
+                    </div>
+
+                    <div class="basis-1/12">
+                        <input class="deleteCategoryButton" type="submit" value="Delete"/>
+                    </div>
+                </form>
+
+                <!-- edit -->
+                <form class="editCategoryForm flex flex-wrap justify-between">
+                    <div class="basis-full">
+                        <p class="text-sm">Edit a Category</p>
+                    </div>
+                    
+                    <div class="basis-5/12">
+                        <select class="editCategorySelect border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
+                            <option value="">Categories</option>
+                        </select>
+                    </div>
+
+                    <div class="basis-5/12">
+                        <input class="editCategoryInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" readonly/>
+                    </div>
+
+                    <div class="basis-1/12">
+                        <input class="editCategoryButton" type="submit" value="Change"/>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <label for="Project Name Button" class="text-sm">Projects</label>
+        <button><i class="projects fa-solid fa-file-pen"></i></button>
     </div>
 
     <!-- weekly total timer -->
     <div class="flex justify-center">
-        <p>Weekly Total</p>
+        <p class="text-red-400">Weekly Total</p>
 
         <input class="weeklyTotal text-slate-300 outline-0 text-center" type="text" value="00:00:00" readonly/>
     </div>

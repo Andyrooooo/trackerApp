@@ -9,14 +9,23 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 let entries = [
-    // {
-    //     entryID: 1,
-    //     entryTitle: 'DGM3770',
-    //     entryDate: '2023-10-20',
-    //     entryProject: '1',
-    //     entryCategory: '1',
-    //     entryTime: '00:01:00',
-    // },
+    // - Testing function for temp time entry -
+    {
+        entryID: 1,
+        entryTitle: 'working on designs',
+        entryDate: '11/26/2023',
+        entryProject: 'Adobe Developer Team',
+        entryCategory: 'Work',
+        entryTime: '00:02:00',
+    },
+    {
+        entryID: 2,
+        entryTitle: 'working on designs',
+        entryDate: '11/27/2023',
+        entryProject: 'Adobe Developer Team',
+        entryCategory: 'Work',
+        entryTime: '00:01:00',
+    },
 ]
 
 let categories = [
@@ -44,17 +53,17 @@ let projects = [
 // Get all entries, categories, and project names
 app.get('/entries', (req, res) => {
     res.send(entries)
-    console.log("its working")
+    // console.log("its working")
 })
 
 app.get('/categories', (req, res) => {
     res.send(categories)
-    console.log("its working")
+    // console.log("its working")
 })
 
 app.get('/projects', (req, res) => {
     res.send(projects)
-    console.log("its working")
+    // console.log("its working")
 })
 
 
