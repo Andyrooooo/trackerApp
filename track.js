@@ -11,11 +11,18 @@ let categoriesContainer = document.querySelector('.categoriesContainer')
 let projects = document.querySelector('.projects')
 let deleteCategorySelect = document.querySelector('.deleteCategorySelect')
 let editCategorySelect = document.querySelector('.editCategorySelect')
+let projectsContainer = document.querySelector('.projectsContainer')
+let addCategoryForm = document.querySelector('.addCategoryForm')
+let addCategoryInput = document.querySelector('.addCategoryInput')
+let deleteCategoryForm = document.querySelector('.deleteCategoryForm')
+let editCategoryInput = document.querySelector('.editCategoryInput')
+let editCategoryForm = document.querySelector('.editCategoryForm')
 
 
-showEntries()
+// showEntries()
 grabCategories()
-grabProjects()
+grabProjects() 
+
 
 /* -------------------------- category options ---------------------------  */
 async function grabCategories() {
@@ -88,6 +95,7 @@ startButton.addEventListener('click', () => {
     stopButton.classList.remove('hidden')
 })
 
+
 // function to add seconds to each timer and then gets formatted or displayed
 function updateTimer() {
     seconds++
@@ -114,6 +122,7 @@ function formatTime(totalSeconds) {
         colons(seconds)
     )
 }
+
 
 // if number is less than 10 then we add a 0 in front, if not then we just return the number
 function colons(number) {
@@ -262,7 +271,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
         dailyDeleteButtonContainer.appendChild(dailyDeleteButton)
         dailyDeleteButtonContainer.classList.add('basis-2/12')
         dailyDeleteButton.classList.add('fa-solid', 'fa-trash')
-
+ 
         // collapse button of info bar
         let dailyCollapseButton = document.createElement("button")
         let dailyCollapseButtonContainer = document.createElement("div")
@@ -298,8 +307,132 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
 }
 
 
+// toggles the categories and projects containers when clicked
 categories.addEventListener('click', () => {
     categoriesContainer.classList.toggle('hidden')
+})
+
+
+projects.addEventListener('click', () => {
+    projectsContainer.classList.toggle('hidden')
+})
+
+
+// ------------------------------ add a category function ----------------------------
+addCategoryForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    
+    // grabs the array of categories and gives us a new id
+    let response = await fetch('http://localhost:5501/categories')
+    let categoryData = await response.json()
+    let newCategoryID = categoryData.length === 0 ? 1 : categoryData.at(-1).categoryID + 1
+
+    let newCategory = {
+        categoryID: newCategoryID,
+        categoryName: addCategoryInput.value,
+    }
+
+    fetch('http://localhost:5501/category', {  
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newCategory)
+    })
+
+    .then(() => {
+        // adds the new option to each of the category select elements
+        let categoryOption = document.createElement("option")
+        categoryOption.value = newCategory.categoryID
+        categoryOption.innerText = addCategoryInput.value
+ 
+        categorySelect.appendChild(categoryOption)
+        deleteCategorySelect.appendChild(categoryOption.cloneNode(true))
+        editCategorySelect.appendChild(categoryOption.cloneNode(true))
+        addCategoryInput.value = ''
+    })
+})
+
+
+// ------------------------------ delete a category function ----------------------------
+deleteCategoryForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    fetch(`http://localhost:5501/categories/${deleteCategorySelect.value}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        // body: JSON.stringify(categoryToDelete)
+    })
+    .then(() => {
+        // deletes the option from each of the category select elements
+        let categoryToDelete = deleteCategorySelect.options[deleteCategorySelect.selectedIndex].text
+        removeCategoryFromSelect(categorySelect, categoryToDelete)
+        removeCategoryFromSelect(deleteCategorySelect, categoryToDelete)
+        removeCategoryFromSelect(editCategorySelect, categoryToDelete)
+
+        function removeCategoryFromSelect(selectOption, categoryName) {
+            for (let i = 0; i < selectOption.options.length; i++) {
+                if (selectOption.options[i].text === categoryName) {
+                    selectOption.remove(i)
+                    break
+                }
+            }
+        }
+
+        deleteCategorySelect.value = ''
+    })
+})
+
+
+// --------------------------------- edits a category function --------------------------
+editCategorySelect.addEventListener('change', async () => {
+
+    editCategoryInput.removeAttribute('readonly', true)
+    editCategoryInput.value = editCategorySelect.options[editCategorySelect.selectedIndex].text
+})
+
+
+// ---------------------- submits that edited category function ------------------------
+editCategoryForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    // console.log(editCategoryInput.value, editCategorySelect.value)
+
+    let editedCategory = {
+        categoryName: editCategoryInput.value,
+    }
+
+    fetch(`http://localhost:5501/categories/${editCategorySelect.value}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editedCategory)
+    })
+    .then(() => {
+        // edits the option from each of the category select elements
+        let categoryToChange = editCategorySelect.options[editCategorySelect.selectedIndex].text
+        console.log(categoryToChange)
+
+        changeCategorySelectOption(categorySelect, categoryToChange)
+        changeCategorySelectOption(deleteCategorySelect, categoryToChange)
+        changeCategorySelectOption(editCategorySelect, categoryToChange)
+
+        function changeCategorySelectOption(selectOptions, categoryToChange) {
+            for (let i = 0; i < selectOptions.options.length; i++) {
+                if (selectOptions.options[i].text === categoryToChange) {
+                    selectOptions.options[i].text = editCategoryInput.value
+                    break
+                }
+            }
+        }
+        
+        editCategoryInput.value = ''
+        editCategorySelect.value = ''
+        editCategoryInput.setAttribute('readonly', true)
+    })
 })
 
 
@@ -317,94 +450,236 @@ categories.addEventListener('click', () => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ------------------------------ Testing function for temp time entry ----------------------------
-async function showEntries() {
-    let response = await fetch('http://localhost:5501/entries')
-    let entryData = await response.json()
-    entryData.forEach(entry => {
-        let entryListItem = document.createElement("li")
+// async function showEntries() {
+//     let response = await fetch('http://localhost:5501/entries')
+//     let entryData = await response.json()
+//     entryData.forEach(entry => {
+//         let entryListItem = document.createElement("li")
 
-        // This will display our date, total daily time, delete button, and collapse button
-        let dailyInfoBar = document.createElement("div")
-        dailyInfoBar.classList.add('flex', 'flex-row', 'bg-slate-200', 'mt-4')
+//         // This will display our date, total daily time, delete button, and collapse button
+//         let dailyInfoBar = document.createElement("div")
+//         dailyInfoBar.classList.add('flex', 'flex-row', 'bg-slate-200', 'mt-4')
 
-        let dailyDate = document.createElement("p")
-        let dailyDateContainer = document.createElement("div")
-        dailyDateContainer.appendChild(dailyDate)
-        dailyDateContainer.classList.add('basis-6/12')
-        dailyDate.classList.add('w-full')
-        dailyDate.innerText = entry.entryDate
+//         let dailyDate = document.createElement("p")
+//         let dailyDateContainer = document.createElement("div")
+//         dailyDateContainer.appendChild(dailyDate)
+//         dailyDateContainer.classList.add('basis-6/12')
+//         dailyDate.classList.add('w-full')
+//         dailyDate.innerText = entry.entryDate
 
-        // let dailyTotalTime = document.createElement("p")
-        let dailyTotalTimeContainer = document.createElement("div")
-        let dailyTotalTime = document.createElement("p")
-        dailyTotalTimeContainer.appendChild(dailyTotalTime)
-        dailyTotalTimeContainer.classList.add('basis-2/12')
-        dailyTotalTime.classList.add('float-right')
-        dailyTotalTime.innerText = entry.entryTime
+//         // let dailyTotalTime = document.createElement("p")
+//         let dailyTotalTimeContainer = document.createElement("div")
+//         let dailyTotalTime = document.createElement("p")
+//         dailyTotalTimeContainer.appendChild(dailyTotalTime)
+//         dailyTotalTimeContainer.classList.add('basis-2/12')
+//         dailyTotalTime.classList.add('float-right')
+//         dailyTotalTime.innerText = entry.entryTime
 
-        let dailyDeleteButton = document.createElement("button")
-        let dailyDeleteButtonContainer = document.createElement("div")
-        dailyDeleteButtonContainer.appendChild(dailyDeleteButton)
-        dailyDeleteButtonContainer.classList.add('basis-2/12')
-        dailyDeleteButton.classList.add('fa-solid', 'fa-trash')
+//         let dailyDeleteButton = document.createElement("button")
+//         let dailyDeleteButtonContainer = document.createElement("div")
+//         dailyDeleteButtonContainer.appendChild(dailyDeleteButton)
+//         dailyDeleteButtonContainer.classList.add('basis-2/12')
+//         dailyDeleteButton.classList.add('fa-solid', 'fa-trash')
 
-        let dailyCollapseButton = document.createElement("button")
-        let dailyCollapseButtonContainer = document.createElement("div")
-        dailyCollapseButtonContainer.appendChild(dailyCollapseButton)
-        dailyCollapseButtonContainer.classList.add('basis-2/12')
-        dailyCollapseButton.classList.add('fa-solid', 'fa-chevron-up')
+//         let dailyCollapseButton = document.createElement("button")
+//         let dailyCollapseButtonContainer = document.createElement("div")
+//         dailyCollapseButtonContainer.appendChild(dailyCollapseButton)
+//         dailyCollapseButtonContainer.classList.add('basis-2/12')
+//         dailyCollapseButton.classList.add('fa-solid', 'fa-chevron-up')
 
-        // This will be the project type of the entry
-        let entryProjectName = document.createElement("p")
-        entryProjectName.value = entry.entryProject
-        entryProjectName.innerText = entry.entryProject
+//         // This will be the project type of the entry
+//         let entryProjectName = document.createElement("p")
+//         entryProjectName.value = entry.entryProject
+//         entryProjectName.innerText = entry.entryProject
 
-        // this will be the category of the entry
-        let entryCategoryName = document.createElement("p")
-        entryCategoryName.classList.add('text-right')
-        entryCategoryName.value = entry.entryCategory
-        entryCategoryName.innerText = entry.entryCategory
+//         // this will be the category of the entry
+//         let entryCategoryName = document.createElement("p")
+//         entryCategoryName.classList.add('text-right')
+//         entryCategoryName.value = entry.entryCategory
+//         entryCategoryName.innerText = entry.entryCategory
 
-        // this will be the title of the entry
-        let entryTitleName = document.createElement("p")
-        entryTitleName.value = entry.entryTitle
-        entryTitleName.innerText = entry.entryTitle
+//         // this will be the title of the entry
+//         let entryTitleName = document.createElement("p")
+//         entryTitleName.value = entry.entryTitle
+//         entryTitleName.innerText = entry.entryTitle
 
-        // this will display the amounted time of the entry
-        let entryTimeNumber = document.createElement("p")
-        entryTimeNumber.classList.add('text-right')
-        entryTimeNumber.value = entry.entryTime
-        entryTimeNumber.innerText = entry.entryTime
+//         // this will display the amounted time of the entry
+//         let entryTimeNumber = document.createElement("p")
+//         entryTimeNumber.classList.add('text-right')
+//         entryTimeNumber.value = entry.entryTime
+//         entryTimeNumber.innerText = entry.entryTime
 
-        // dividers and styling
-        let listSorting = document.createElement("div")
-        listSorting.classList.add('basis-8/12')
-        let listDescription = document.createElement("div")
-        listDescription.classList.add('basis-3/12')
-        let changeDeleteTimeEnry = document.createElement("div")
-        changeDeleteTimeEnry.classList.add('basis-1/12')
-        let changeButton = document.createElement("button")
-        changeButton.classList.add('fa-solid', 'fa-ellipsis-vertical', 'float-right')
+//         // dividers and styling
+//         let listSorting = document.createElement("div")
+//         listSorting.classList.add('basis-8/12')
+//         let listDescription = document.createElement("div")
+//         listDescription.classList.add('basis-3/12')
+//         let changeDeleteTimeEnry = document.createElement("div")
+//         changeDeleteTimeEnry.classList.add('basis-1/12')
+//         let changeButton = document.createElement("button")
+//         changeButton.classList.add('fa-solid', 'fa-ellipsis-vertical', 'float-right')
 
-        // more dividers
-        let entrySection = document.createElement("div")
-        entrySection.classList.add('flex', 'bg-slate-100')
+//         // more dividers
+//         let entrySection = document.createElement("div")
+//         entrySection.classList.add('flex', 'bg-slate-100')
 
-        dailyInfoBar.appendChild(dailyDateContainer)
-        dailyInfoBar.appendChild(dailyTotalTimeContainer)
-        dailyInfoBar.appendChild(dailyDeleteButtonContainer)
-        dailyInfoBar.appendChild(dailyCollapseButtonContainer)
-        listSorting.appendChild(entryProjectName)
-        listSorting.appendChild(entryTitleName)
-        listDescription.appendChild(entryCategoryName)
-        listDescription.appendChild(entryTimeNumber)
-        changeDeleteTimeEnry.appendChild(changeButton)
-        entryListItem.appendChild(dailyInfoBar)
-        entrySection.appendChild(listSorting)
-        entrySection.appendChild(listDescription)
-        entrySection.appendChild(changeDeleteTimeEnry)
-        entryListItem.appendChild(entrySection)
-        displayEntries.appendChild(entryListItem)
-    })
-}
+//         dailyInfoBar.appendChild(dailyDateContainer)
+//         dailyInfoBar.appendChild(dailyTotalTimeContainer)
+//         dailyInfoBar.appendChild(dailyDeleteButtonContainer)
+//         dailyInfoBar.appendChild(dailyCollapseButtonContainer)
+//         listSorting.appendChild(entryProjectName)
+//         listSorting.appendChild(entryTitleName)
+//         listDescription.appendChild(entryCategoryName)
+//         listDescription.appendChild(entryTimeNumber)
+//         changeDeleteTimeEnry.appendChild(changeButton)
+//         entryListItem.appendChild(dailyInfoBar)
+//         entrySection.appendChild(listSorting)
+//         entrySection.appendChild(listDescription)
+//         entrySection.appendChild(changeDeleteTimeEnry)
+//         entryListItem.appendChild(entrySection)
+//         displayEntries.appendChild(entryListItem)
+//     })
+// }

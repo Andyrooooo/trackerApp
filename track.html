@@ -49,8 +49,13 @@
 
         <div class="categoriesContainer absolute z-10 w-full right-0 hidden">
 
-            <div class="InnerCategoriesContainer bg-slate-100 ring-2 mx-4 mt-4 p-4  mb-4">
-                <h2 class="font-bold uppercase text-center">Categories</h2>
+            <div class="InnerCategoriesContainer shadow-md bg-slate-100 ring-2 mx-4 mt-4 p-4  mb-4">
+
+                <!-- categories title -->
+                <div class="flex justify-center">
+                    <h2 class="font-bold uppercase">Categories</h2>
+                    <i class="fa-solid fa-table-columns ml-4 mt-1"></i>
+                </div>
 
                 <!-- add -->
                 <form class="addCategoryForm flex flex-wrap justify-between">
@@ -59,7 +64,7 @@
                     </div>
                     
                     <div class="basis-10/12">
-                        <input class="addCategory border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Category Name..."/>
+                        <input class="addCategoryInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Category Name..."/>
                     </div>
 
                     <div class="basis-1/12">
@@ -108,8 +113,75 @@
 
         </div>
 
+        <!---------------------- PROJECTS SECION ------------------------------>
         <label for="Project Name Button" class="text-sm">Projects</label>
         <button><i class="projects fa-solid fa-file-pen"></i></button>
+
+        <div class="projectsContainer absolute z-10 w-full right-0 hidden">
+
+            <div class="InnerProjectsContainer shadow-md bg-slate-100 ring-2 mx-4 mt-4 p-4  mb-4">
+
+                <!-- project title -->
+                <div class="flex justify-center">
+                    <h2 class="font-bold uppercase">Projects</h2>
+                    <i class="fa-solid fa-file-pen ml-4 mt-1"></i>
+                </div>
+
+                <!-- add -->
+                <form class="addProjectForm flex flex-wrap justify-between">
+                    <div class="basis-full">
+                        <p class="text-sm">Add a Project</p>
+                    </div>
+                    
+                    <div class="basis-10/12">
+                        <input class="addProjectInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Project Name..."/>
+                    </div>
+
+                    <div class="basis-1/12">
+                        <input class="addProjectButton" type="submit" value="Add"/>
+                    </div>
+                </form>
+
+                <!-- delete -->
+                <form class="deleteProjectForm flex flex-wrap justify-between">
+                    <div class="basis-full">
+                        <p class="text-sm">Delete a Project</p>
+                    </div>
+                    
+                    <div class="basis-10/12">
+                        <select class="deleteProjectSelect border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
+                            <option value="">Projects</option>
+                        </select>
+                    </div>
+
+                    <div class="basis-1/12">
+                        <input class="deleteProjectButton" type="submit" value="Delete"/>
+                    </div>
+                </form>
+
+                <!-- edit -->
+                <form class="editProjectForm flex flex-wrap justify-between">
+                    <div class="basis-full">
+                        <p class="text-sm">Edit a Project</p>
+                    </div>
+                    
+                    <div class="basis-5/12">
+                        <select class="editProjectSelect border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
+                            <option value="">Projects</option>
+                        </select>
+                    </div>
+
+                    <div class="basis-5/12">
+                        <input class="editProjectInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" readonly/>
+                    </div>
+
+                    <div class="basis-1/12">
+                        <input class="editProjectButton" type="submit" value="Change"/>
+                    </div>
+                </form>
+            </div>
+
+        </div>
     </div>
 
     <!-- weekly total timer -->
