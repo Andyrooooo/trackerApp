@@ -27,6 +27,8 @@ let editProjectForm = document.querySelector('.editProjectForm')
 let closeAlert = document.querySelector('.closeAlert')
 let message = document.querySelector('.message')
 let alertMessageContainer = document.querySelector('.alertMessageContainer')
+let entriesContainer = document.querySelector('.entriesContainer')
+let cancelEdit = document.querySelector('.cancelEdit')
 
 
 // showEntries()
@@ -183,6 +185,9 @@ stopButton.addEventListener('click', async (e) => {
 })
 
 
+
+
+
 /* -------------------- new entry that gets displayed to the UI ------------- */
 function createNewEntry(newEntry, projectName, categoryName, entryData) {
     
@@ -314,8 +319,22 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
         categorySelect.value = ''
         timerInput.value = '00:00:00'
         seconds = 0
-
+        
+        // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        // dailyCollapseButton.addEventListener('click', () => {
+        //     entrySection.classList.toggle('hidden')
+        // })
+        /*  WE STILL HAVE TO FIGURE OUT HOW TO GET THE ENTRIES TO COLLAPSE AND SET UP THE TRASH ICON TO DELETE THE WHOLE DAY ENTRIES -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
     }
+
+    changeButton.addEventListener('click', () => {
+        entriesContainer.classList.remove('hidden')
+    })
+
+    cancelEdit.addEventListener('click', () => {
+    entriesContainer.classList.add('hidden')
+    })
+
 }
 
 

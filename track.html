@@ -54,7 +54,7 @@
     </div>
 
 
-    <!-- category and project name edit buttons -->
+    <!-- category and project name edit buttons and edit entries -->
     <div class="float-right">
         <label for="Category Button" class="text-sm">Categories</label>
         <button><i class="fa-solid fa-table-columns categories static"></i></button>
@@ -194,7 +194,78 @@
             </div>
 
         </div>
-    </div>
+
+
+        <!---------------------- ENTRIES SECION ------------------------------>
+        <div class="entriesContainer absolute z-10 w-full right-0 hidden"><!-- hidden -->
+
+            <div class="InnerEntriesContainer shadow-md bg-slate-100 ring-2 mx-4 mt-4 p-4  mb-4">
+
+                <!-- cancel button -->
+                <button class="cancelEdit flex justify-end">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </button>
+
+                <!-- Entry title -->
+                <div class="flex justify-center">
+                    <h2 class="font-bold uppercase">Edit</h2>
+                    <i class="fa-solid fa-wrench ml-4 mt-1"></i>
+                </div>
+
+
+                <!-- edit entry -->
+                <form class="editEntryForm flex flex-wrap justify-between">
+                    <!-- entry name -->
+                    <div class="basis-full">
+                        <p class="text-sm">Edit Name</p>
+                    </div>
+
+                    <div class="">
+                        <input class="editEntryInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" />
+                    </div>
+
+
+                    <!-- entry category -->
+                    <div class="basis-full">
+                        <p class="text-sm">Edit Category</p>
+                    </div>
+
+                    <select class="entryCategorySelect ring-2 ring-black p-1 w-full mt-6 mb-2 py-2">
+                        <option value="">Category</option>
+                    </select>
+
+
+                    <!-- entry project name -->
+                    <div class="basis-full">
+                        <p class="text-sm">Edit Project Name</p>
+                    </div>
+
+                    <select class="entryProjectSelect ring-2 ring-black p-1 w-full my-4 py-2">
+                        <option value="">Project Name</option>
+                    </select>
+
+
+                    <!-- entry time -->
+                    <div class="basis-full">
+                        <p class="text-sm">Edit Entry Time</p>
+                    </div>
+
+                    <input class="editEntryTotal text-slate-300 outline-0 text-center" type="text" value="00:00:00" />
+
+
+                    <div class="">
+                        <button class="deleteEntryButton">Delete Entry</button>
+                    </div>
+
+                    <div class="">
+                        <input class="editEntryButton" type="submit" value="Save"/>
+                    </div>
+                </form>
+
+            </div> <!-- end of inner entries container -->
+        </div> <!-- end of entries container -->
+    </div> <!-- end of project, category, entry edits -->
+
 
     <!-- weekly total timer -->
     <div class="flex justify-center">
