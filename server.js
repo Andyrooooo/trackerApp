@@ -93,8 +93,6 @@ app.post('/entry', (req, res) => {
 
 // Post request to add new category
 app.post('/category', (req, res) => {
-    // let newCategoryID = categories.length === 0 ? 1 : categories.at(-1).categoryID + 1
-   
     let newCategory = {
         categoryID: req.body.categoryID,
         categoryName: req.body.categoryName,
@@ -105,6 +103,7 @@ app.post('/category', (req, res) => {
     console.log(categories)  
 })
 
+// delete reauest to delete a category
 app.delete('/categories/:categoryID', (req, res) => {
     let categoryToDelete = parseInt(req.params.categoryID)
     let newCategories = categories.filter(category => category.categoryID != categoryToDelete)
@@ -115,6 +114,7 @@ app.delete('/categories/:categoryID', (req, res) => {
     res.send(categories)   
 })
 
+// put request to update a category
 app.put('/categories/:categoryID', (req, res) => {
     let categoryToUpdate = parseInt(req.params.categoryID)
 
@@ -122,6 +122,39 @@ app.put('/categories/:categoryID', (req, res) => {
 
     console.log(categories)
     res.send(categories)
+})
+
+// Post request to add new project name
+app.post('/project', (req, res) => {
+    let newProject = {
+        projectID: req.body.projectID,
+        projectName: req.body.projectName,
+    }
+ 
+    projects = [...projects, newProject]
+    res.send(projects)
+    console.log(projects)  
+})
+
+// delete request to delete a project name
+app.delete('/projects/:projectID', (req, res) => {
+    let projectToDelete = parseInt(req.params.projectID)
+    let newProjects = projects.filter(project => project.projectID != projectToDelete)
+
+    projects = [...newProjects]
+
+    console.log(projects) 
+    res.send(projects)   
+})
+
+// put request to update a project name
+app.put('/projects/:projectID', (req, res) => {
+    let projectToUpdate = parseInt(req.params.projectID)
+
+    projects.find(project => project.projectID == projectToUpdate).projectName = req.body.projectName
+
+    console.log(projects) 
+    res.send(projects)
 })
  
 app.listen(port, () => {

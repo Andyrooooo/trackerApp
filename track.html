@@ -41,6 +41,18 @@
 
     <div class="border-b-2 mt-4 mb-16"></div>
 
+    <!------------------- modal that displays a message --------------------->
+    <div class="alertMessageContainer absolute z-30 w-full right-0 hidden">
+        <div class="shadow-md bg-slate-100 ring-2 w-8/12 mx-auto mt-4 p-4 mb-4 rounded-md">
+            <h1 class="text-center text-red-500 font-bold text-xl">Alert</h1>
+            <div class="border-b-2 mt-4 mb-4"></div>
+            <p class="message px-4 text-center mb-4"></p>
+            <div class="flex justify-center">
+                <button class="closeAlert ring-2 py-1 px-4 rounded-md">close</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- category and project name edit buttons -->
     <div class="float-right">
@@ -117,7 +129,7 @@
         <label for="Project Name Button" class="text-sm">Projects</label>
         <button><i class="projects fa-solid fa-file-pen"></i></button>
 
-        <div class="projectsContainer absolute z-10 w-full right-0 hidden">
+        <div class="projectsContainer absolute z-10 w-full right-0 hidden"><!-- hidden -->
 
             <div class="InnerProjectsContainer shadow-md bg-slate-100 ring-2 mx-4 mt-4 p-4  mb-4">
 

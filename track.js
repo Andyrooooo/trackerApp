@@ -17,6 +17,16 @@ let addCategoryInput = document.querySelector('.addCategoryInput')
 let deleteCategoryForm = document.querySelector('.deleteCategoryForm')
 let editCategoryInput = document.querySelector('.editCategoryInput')
 let editCategoryForm = document.querySelector('.editCategoryForm')
+let addProjectForm = document.querySelector('.addProjectForm')
+let addProjectInput = document.querySelector('.addProjectInput')
+let deleteProjectSelect = document.querySelector('.deleteProjectSelect')
+let editProjectSelect = document.querySelector('.editProjectSelect')
+let deleteProjectForm = document.querySelector('.deleteProjectForm')
+let editProjectInput = document.querySelector('.editProjectInput')
+let editProjectForm = document.querySelector('.editProjectForm')
+let closeAlert = document.querySelector('.closeAlert')
+let message = document.querySelector('.message')
+let alertMessageContainer = document.querySelector('.alertMessageContainer')
 
 
 // showEntries()
@@ -51,6 +61,8 @@ async function grabProjects() {
         projectOption.value = project.projectID
         projectOption.innerText = project.projectName
         projectSelect.appendChild(projectOption)
+        deleteProjectSelect.appendChild(projectOption.cloneNode(true))
+        editProjectSelect.appendChild(projectOption.cloneNode(true))
     })
     // console.log(projectData)
 }
@@ -317,40 +329,48 @@ projects.addEventListener('click', () => {
     projectsContainer.classList.toggle('hidden')
 })
 
+closeAlert.addEventListener('click', () => {
+    alertMessageContainer.classList.add('hidden')
+})
 
 // ------------------------------ add a category function ----------------------------
 addCategoryForm.addEventListener('submit', async (e) => {
     e.preventDefault()
     
-    // grabs the array of categories and gives us a new id
-    let response = await fetch('http://localhost:5501/categories')
-    let categoryData = await response.json()
-    let newCategoryID = categoryData.length === 0 ? 1 : categoryData.at(-1).categoryID + 1
+    if (addCategoryInput.value === '') {
+        alertMessageContainer.classList.remove('hidden')
+        message.innerText = 'No input was made. Please add a category name.'
+    } else {
+        // grabs the array of categories and gives us a new id
+        let response = await fetch('http://localhost:5501/categories')
+        let categoryData = await response.json()
+        let newCategoryID = categoryData.length === 0 ? 1 : categoryData.at(-1).categoryID + 1
 
-    let newCategory = {
-        categoryID: newCategoryID,
-        categoryName: addCategoryInput.value,
+        let newCategory = {
+            categoryID: newCategoryID,
+            categoryName: addCategoryInput.value,
+        }
+
+        fetch('http://localhost:5501/category', {  
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newCategory)
+        })
+
+        .then(() => {
+            // adds the new option to each of the category select elements
+            let categoryOption = document.createElement("option")
+            categoryOption.value = newCategory.categoryID
+            categoryOption.innerText = addCategoryInput.value
+    
+            categorySelect.appendChild(categoryOption)
+            deleteCategorySelect.appendChild(categoryOption.cloneNode(true))
+            editCategorySelect.appendChild(categoryOption.cloneNode(true))
+            addCategoryInput.value = ''
+        })
     }
-
-    fetch('http://localhost:5501/category', {  
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newCategory)
-    })
-
-    .then(() => {
-        // adds the new option to each of the category select elements
-        let categoryOption = document.createElement("option")
-        categoryOption.value = newCategory.categoryID
-        categoryOption.innerText = addCategoryInput.value
- 
-        categorySelect.appendChild(categoryOption)
-        deleteCategorySelect.appendChild(categoryOption.cloneNode(true))
-        editCategorySelect.appendChild(categoryOption.cloneNode(true))
-        addCategoryInput.value = ''
-    })
 })
 
 
@@ -358,31 +378,36 @@ addCategoryForm.addEventListener('submit', async (e) => {
 deleteCategoryForm.addEventListener('submit', async (e) => {
     e.preventDefault()
 
-    fetch(`http://localhost:5501/categories/${deleteCategorySelect.value}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        // body: JSON.stringify(categoryToDelete)
-    })
-    .then(() => {
-        // deletes the option from each of the category select elements
-        let categoryToDelete = deleteCategorySelect.options[deleteCategorySelect.selectedIndex].text
-        removeCategoryFromSelect(categorySelect, categoryToDelete)
-        removeCategoryFromSelect(deleteCategorySelect, categoryToDelete)
-        removeCategoryFromSelect(editCategorySelect, categoryToDelete)
+    if (deleteCategorySelect.value === '') {
+        alertMessageContainer.classList.remove('hidden')
+        message.innerText = 'No option was selected. Please select a category to delete.'
+    } else {
+        fetch(`http://localhost:5501/categories/${deleteCategorySelect.value}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // body: JSON.stringify(categoryToDelete)
+        })
+        .then(() => {
+            // deletes the option from each of the category select elements
+            let categoryToDelete = deleteCategorySelect.options[deleteCategorySelect.selectedIndex].text
+            removeCategoryFromSelect(categorySelect, categoryToDelete)
+            removeCategoryFromSelect(deleteCategorySelect, categoryToDelete)
+            removeCategoryFromSelect(editCategorySelect, categoryToDelete)
 
-        function removeCategoryFromSelect(selectOption, categoryName) {
-            for (let i = 0; i < selectOption.options.length; i++) {
-                if (selectOption.options[i].text === categoryName) {
-                    selectOption.remove(i)
-                    break
+            function removeCategoryFromSelect(selectOption, categoryName) {
+                for (let i = 0; i < selectOption.options.length; i++) {
+                    if (selectOption.options[i].text === categoryName) {
+                        selectOption.remove(i)
+                        break
+                    }
                 }
             }
-        }
 
-        deleteCategorySelect.value = ''
-    })
+            deleteCategorySelect.value = ''
+        })
+    }
 })
 
 
@@ -436,11 +461,128 @@ editCategoryForm.addEventListener('submit', async (e) => {
 })
 
 
+// ------------------------------ add a Project Name function ----------------------------
+addProjectForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    
+    if (addProjectInput.value === '') {
+        alertMessageContainer.classList.remove('hidden')
+        message.innerText = 'No input was made. Please add a project name.'
+    } else {
+        // grabs the array of project names and gives us a new id
+        let response = await fetch('http://localhost:5501/projects')
+        let projectData = await response.json()
+        let newProjectID = projectData.length === 0 ? 1 : projectData.at(-1).projectID + 1
+
+        let newProject = {
+            projectID: newProjectID,
+            projectName: addProjectInput.value,
+        }
+
+        fetch('http://localhost:5501/project', {  
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newProject)
+        })
+
+        .then(() => {
+            // adds the new option to each of the project select elements
+            let projectOption = document.createElement("option")
+            projectOption.value = newProject.projectID
+            projectOption.innerText = addProjectInput.value
+    
+            projectSelect.appendChild(projectOption)
+            deleteProjectSelect.appendChild(projectOption.cloneNode(true))
+            editProjectSelect.appendChild(projectOption.cloneNode(true))
+            addProjectInput.value = ''
+        })
+    }
+})
 
 
+// ------------------------------ delete a project name function ----------------------------
+deleteProjectForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    if (deleteProjectSelect.value === '') {
+        alertMessageContainer.classList.remove('hidden')
+        message.innerText = 'No option was selected. Please select a project name to delete.'
+    } else {
+        fetch(`http://localhost:5501/projects/${deleteProjectSelect.value}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(() => {
+            // deletes the option from each of the project select elements
+            let ProjectToDelete = deleteProjectSelect.options[deleteProjectSelect.selectedIndex].text
+            removeProjectOption(projectSelect, ProjectToDelete)
+            removeProjectOption(deleteProjectSelect, ProjectToDelete)
+            removeProjectOption(editProjectSelect, ProjectToDelete)
+
+            function removeProjectOption(selectOption, projectName) {
+                for (let i = 0; i < selectOption.options.length; i++) {
+                    if (selectOption.options[i].text === projectName) {
+                        selectOption.remove(i)
+                        break
+                    }
+                }
+            }
+
+            deleteProjectSelect.value = ''
+        })
+    }
+})
 
 
+// --------------------------------- edits a project name function --------------------------
+editProjectSelect.addEventListener('change', async () => {
 
+    editProjectInput.removeAttribute('readonly', true)
+    editProjectInput.value = editProjectSelect.options[editProjectSelect.selectedIndex].text
+})
+
+
+// ---------------------- submits the edited project name function ------------------------
+editProjectForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+
+    let editedProject = {
+        projectName: editProjectInput.value,
+    }
+
+    fetch(`http://localhost:5501/projects/${editProjectSelect.value}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editedProject)
+    })
+    .then(() => {
+        // edits the option from each of the project name select elements
+        let projectToChange = editProjectSelect.options[editProjectSelect.selectedIndex].text
+
+        changeProjectOption(projectSelect, projectToChange)
+        changeProjectOption(deleteProjectSelect, projectToChange)
+        changeProjectOption(editProjectSelect, projectToChange)
+
+        function changeProjectOption(selectOptions, projectToChange) {
+            for (let i = 0; i < selectOptions.options.length; i++) {
+                if (selectOptions.options[i].text === projectToChange) {
+                    selectOptions.options[i].text = editProjectInput.value
+                    break
+                }
+            }
+        }
+        
+        editProjectInput.value = ''
+        editProjectSelect.value = ''
+        editProjectInput.setAttribute('readonly', true)
+    })
+})
 
 
 
