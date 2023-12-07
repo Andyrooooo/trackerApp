@@ -29,7 +29,19 @@ let message = document.querySelector('.message')
 let alertMessageContainer = document.querySelector('.alertMessageContainer')
 let entriesContainer = document.querySelector('.entriesContainer')
 let cancelEdit = document.querySelector('.cancelEdit')
-
+let cancelProject = document.querySelector('.cancelProject')
+let cancelCategories = document.querySelector('.cancelCategories')
+let entryCategorySelect = document.querySelector('.entryCategorySelect')
+let entryProjectSelect = document.querySelector('.entryProjectSelect')
+let editEntryInput = document.querySelector('.editEntryInput')
+let editEntryTotal = document.querySelector('.editEntryTotal')
+let editEntryButton = document.querySelector('.editEntryButton')
+let deleteEntryButton = document.querySelector('.deleteEntryButton')
+let deleteAlertMessageContainer = document.querySelector('.deleteAlertMessageContainer')
+let deleteMessage = document.querySelector('.deleteMessage')
+let deleteAlert = document.querySelector('.deleteAlert')
+let cancelDeleteAlert = document.querySelector('.cancelDeleteAlert')
+/* ------------------------------------ end of element creations -------------------------------------------------- */
 
 // showEntries()
 grabCategories()
@@ -48,8 +60,8 @@ async function grabCategories() {
         categorySelect.appendChild(categoryOption)
         deleteCategorySelect.appendChild(categoryOption.cloneNode(true))
         editCategorySelect.appendChild(categoryOption.cloneNode(true))
+        entryCategorySelect.appendChild(categoryOption.cloneNode(true))
     })
-    // console.log(categoryData)
 }
 
 
@@ -65,8 +77,8 @@ async function grabProjects() {
         projectSelect.appendChild(projectOption)
         deleteProjectSelect.appendChild(projectOption.cloneNode(true))
         editProjectSelect.appendChild(projectOption.cloneNode(true))
+        entryProjectSelect.appendChild(projectOption.cloneNode(true))
     })
-    // console.log(projectData)
 }
 
 
@@ -74,7 +86,6 @@ async function grabProjects() {
 async function checkDate() {
     let currentDate = new Date()
     let startDate = new Date().toLocaleDateString()
-    // console.log(typeof(startDate))
     let response = await fetch('http://localhost:5501/entries')
     let entryDates = await response.json()
     let checkDailyDates = entryDates.some(entry => entry.entryDate === startDate)
@@ -85,7 +96,6 @@ async function checkDate() {
     } else {
         let entriesBeforeMonday = entryDates.some(entry => new Date(entry.entryDate).getDay() < 1)
         if (entriesBeforeMonday) { weeklySeconds = 0 }
-        // console.log(entriesBeforeMonday)
     }
 }
 
@@ -97,6 +107,8 @@ let dailySeconds = 0
 let weeklySeconds = 0
 checkDate()
 let totalDailyTime
+
+
 
 
 // button to start timer
@@ -162,7 +174,10 @@ stopButton.addEventListener('click', async (e) => {
     let selectedProjectName = projectSelect.options[projectSelect.selectedIndex].text
     let selectedCategoryName = categorySelect.options[categorySelect.selectedIndex].text
 
+    let newEntryID = entryData.length === 0 ? 1 : entryData.at(-1).entryID + 1
+
     let newEntry = {
+        entryID: newEntryID,
         entryTitle: inputTitle.value,
         // gives us the new date and filters it to just the MM/DD/YYYY format
         entryDate: new Date().toLocaleDateString(),
@@ -171,6 +186,18 @@ stopButton.addEventListener('click', async (e) => {
         entryTime: timerInput.value,
     }
 
+    let newTime = {
+        dailyTime: totalDailyTime
+    }
+
+    fetch('http://localhost:5501/dailyTime', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newTime)
+    })
+    
     fetch('http://localhost:5501/entry', {
         method: 'POST',
         headers: {
@@ -178,23 +205,31 @@ stopButton.addEventListener('click', async (e) => {
         },
         body: JSON.stringify(newEntry)
     })
+
+
+    
     .then(() => {
         // we then pass the new object and project and category names to the createNewEntry function
-        createNewEntry(newEntry, selectedProjectName, selectedCategoryName, entryData)
+        createNewEntry(newEntry, selectedProjectName, selectedCategoryName, entryData, newTime)
     }) 
 })
 
 
 
 
-
+let dailyTotalTimeOne = document.createElement("p")
 /* -------------------- new entry that gets displayed to the UI ------------- */
 function createNewEntry(newEntry, projectName, categoryName, entryData) {
+
+    let entryListItem = document.createElement("li")
+    let entryUIID = newEntry.entryID
+    entryListItem.setAttribute('data-entry-id', entryUIID)
+    let dailyCollapseButton = document.createElement("button")
+    let entryDateForExistingEntries = newEntry.entryDate
+    let dailyDeleteButton = document.createElement("button")
     
     // boolean to check if the entry date already exists
     let existingEntryDate = entryData.some(entry => entry.entryDate === newEntry.entryDate)
-
-    let entryListItem = document.createElement("li")
 
     // This will be the project type of the entry
     let entryProjectName = document.createElement("p")
@@ -213,12 +248,13 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
     entryTitleName.innerText = newEntry.entryTitle
 
     // this will display the amounted time of the entry
-    let entryTimeNumber = document.createElement("p")
+    let entryTimeNumber = document.createElement("p") 
     entryTimeNumber.value = newEntry.entryTime
     entryTimeNumber.classList.add('text-right')
-    entryTimeNumber.innerText = newEntry.entryTime
+    entryTimeNumber.innerText = newEntry.entryTime 
 
     // dividers and styling
+    entryListItem.classList.add('bg-white', 'shadow-md', 'border-t-2', 'p-4', 'pt-8')
     let listSorting = document.createElement("div")
     listSorting.classList.add('basis-8/12')
     let listDescription = document.createElement("div")
@@ -226,11 +262,15 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
     let changeDeleteTimeEnry = document.createElement("div")
     changeDeleteTimeEnry.classList.add('basis-1/12')
     let changeButton = document.createElement("button")
-    changeButton.classList.add('fa-solid', 'fa-ellipsis-vertical', 'float-right')
+    changeButton.classList.add('fa-solid', 'fa-ellipsis-vertical', 'float-right', 'text-xl', 'text-emerald-400', 'align-middle', 'hover:text-emerald-100')
+    entryProjectName.classList.add('text-emerald-500', 'mb-2')
+    entryTitleName.classList.add('text-emerald-500')
+    entryCategoryName.classList.add('text-emerald-500', 'mb-2')
+    entryTimeNumber.classList.add('text-emerald-500')
 
     // more dividers
     let entrySection = document.createElement("div")
-    entrySection.classList.add('flex', 'bg-slate-100')
+    entrySection.classList.add('flex')
 
     // appends for the elements
     listSorting.appendChild(entryProjectName)
@@ -244,110 +284,350 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
     entryListItem.appendChild(entrySection)
     displayEntries.appendChild(entryListItem)
 
+    inputTitle.value = ''
+    projectSelect.value = ''
+    categorySelect.value = ''
+    timerInput.value = '00:00:00'
+    seconds = 0
+
     // conditioning to check if the entry date already exists and update the daily total time
     if (existingEntryDate) {
-        // clear input fields and reset timer
+        async function grabTime() {
+            let response = await fetch('http://localhost:5501/dailyTime')
+            let grabTime = await response.json()
+            dailyTotalTimeOne.innerText = formatTime(grabTime[0].time)
+
+        }
+        grabTime()
+            // clear input fields and reset timer
         inputTitle.value = ''
         projectSelect.value = ''
         categorySelect.value = ''
         timerInput.value = '00:00:00'
-        seconds = 0
-        // variable to hold the total daily time, it uses an attribute to get the date of the entry
-        let dailyTotalTimeOne = document.querySelector(`.dailyTotalTimeOne[data-date="${newEntry.entryDate}"]`)
-        // formats and updates the daily total time
-        dailyTotalTimeOne.innerText = formatTime(totalDailyTime)
-        // console.log(dailyTotalTimeOne)
+        seconds = 0  
+
     } 
     else if (!existingEntryDate) 
     {
-        // This will display our date, total daily time, delete button, and collapse button
-        let dailyInfoBar = document.createElement("div")
-        dailyInfoBar.classList.add('flex', 'flex-row', 'bg-slate-200', 'mt-4')
-
-        // date of info bar
-        let dailyDate = document.createElement("p")
-        let dailyDateContainer = document.createElement("div")
-        dailyDateContainer.appendChild(dailyDate)
-        dailyDateContainer.classList.add('basis-6/12')
-        // dailyDate.classList.add('text-right', 'w-full')
-        dailyDate.innerText = newEntry.entryDate
-
-        // total daily time of info bar
-        let dailyTotalTimeOneContainer = document.createElement("div")
-        dailyTotalTimeOneContainer.classList.add('basis-2/12')
-        let dailyTotalTimeOne = document.createElement("p")
-        dailyTotalTimeOneContainer.appendChild(dailyTotalTimeOne)
-        dailyTotalTimeOne.setAttribute('data-date', newEntry.entryDate)
-        dailyTotalTimeOne.classList.add('dailyTotalTimeOne','float-right')
-        // formats and updates the daily total time
-        dailyTotalTimeOne.innerText = formatTime(totalDailyTime)
-
-        // delete button of info bar
-        let dailyDeleteButton = document.createElement("button")
-        let dailyDeleteButtonContainer = document.createElement("div")
-        dailyDeleteButtonContainer.appendChild(dailyDeleteButton)
-        dailyDeleteButtonContainer.classList.add('basis-2/12')
-        dailyDeleteButton.classList.add('fa-solid', 'fa-trash')
+        async function grabTime() {
+            let response = await fetch('http://localhost:5501/dailyTime')
+            let grabTime = await response.json()
+            dailyTotalTimeOne.innerText = formatTime(grabTime[0].time)
+             
+        }
+        grabTime()
+                // This will display our date, total daily time, delete button, and collapse button
+            let dailyInfoBar = document.createElement("div")
+            dailyInfoBar.classList.add('flex', 'flex-row', 'bg-emerald-400', 'mt-4', 'p-4', 'text-emerald-50')
  
-        // collapse button of info bar
-        let dailyCollapseButton = document.createElement("button")
-        let dailyCollapseButtonContainer = document.createElement("div")
-        dailyCollapseButtonContainer.appendChild(dailyCollapseButton)
-        dailyCollapseButtonContainer.classList.add('basis-2/12')
-        dailyCollapseButton.classList.add('fa-solid', 'fa-chevron-up')
+            // date of info bar
+            let dailyDate = document.createElement("p")
+            let dailyDateContainer = document.createElement("div")
+            dailyDateContainer.appendChild(dailyDate)
+            dailyDateContainer.classList.add('basis-7/12', 'float-right')
+            // dailyDate.classList.add('text-right', 'w-full')
+            dailyDate.innerText = newEntry.entryDate
 
-        // MORE appends
-        dailyInfoBar.appendChild(dailyDateContainer)
-        dailyInfoBar.appendChild(dailyTotalTimeOneContainer)
-        dailyInfoBar.appendChild(dailyDeleteButtonContainer)
-        dailyInfoBar.appendChild(dailyCollapseButtonContainer)
-        listSorting.appendChild(entryProjectName)
-        listSorting.appendChild(entryTitleName)
-        listDescription.appendChild(entryCategoryName)
-        listDescription.appendChild(entryTimeNumber)
-        changeDeleteTimeEnry.appendChild(changeButton)
-        entryListItem.appendChild(dailyInfoBar)
-        entrySection.appendChild(listSorting)
-        entrySection.appendChild(listDescription)
-        entrySection.appendChild(changeDeleteTimeEnry)
-        entryListItem.appendChild(entrySection)
-        displayEntries.appendChild(entryListItem)
+            // total daily time of info bar
+            let dailyTotalTimeOneContainer = document.createElement("div")
+            dailyTotalTimeOneContainer.classList.add('basis-3/12')
+              
+            dailyTotalTimeOneContainer.appendChild(dailyTotalTimeOne)
+            
+            dailyTotalTimeOne.classList.add('float-right')
+            // formats and updates the daily total time
+            
 
-        // clear input fields and reset timer
-        inputTitle.value = ''
-        projectSelect.value = ''
-        categorySelect.value = ''
-        timerInput.value = '00:00:00'
-        seconds = 0
-        
-        // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        // dailyCollapseButton.addEventListener('click', () => {
-        //     entrySection.classList.toggle('hidden')
-        // })
-        /*  WE STILL HAVE TO FIGURE OUT HOW TO GET THE ENTRIES TO COLLAPSE AND SET UP THE TRASH ICON TO DELETE THE WHOLE DAY ENTRIES -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+            // delete button of info bar
+            let dailyDeleteButtonContainer = document.createElement("div")
+            dailyDeleteButtonContainer.appendChild(dailyDeleteButton)
+            dailyDeleteButtonContainer.classList.add('basis-1/12')
+            dailyDeleteButton.classList.add('fa-solid', 'fa-trash', 'float-right', 'text-xl', 'hover:text-emerald-200')
+
+            // collapse button of info bar
+            let dailyCollapseButtonContainer = document.createElement("div")
+            dailyCollapseButtonContainer.appendChild(dailyCollapseButton)
+            dailyCollapseButtonContainer.classList.add('basis-1/12')
+            dailyCollapseButton.classList.add('fa-solid', 'fa-chevron-up', 'float-right', 'text-xl', 'hover:text-emerald-200')
+
+            // MORE appends
+            dailyInfoBar.appendChild(dailyDateContainer)
+            dailyInfoBar.appendChild(dailyTotalTimeOneContainer)
+            dailyInfoBar.appendChild(dailyDeleteButtonContainer)
+            dailyInfoBar.appendChild(dailyCollapseButtonContainer)
+            listSorting.appendChild(entryProjectName)
+            listSorting.appendChild(entryTitleName)
+            listDescription.appendChild(entryCategoryName)
+            listDescription.appendChild(entryTimeNumber)
+            changeDeleteTimeEnry.appendChild(changeButton)
+            displayEntries.appendChild(dailyInfoBar)
+            entrySection.appendChild(listSorting)
+            entrySection.appendChild(listDescription)
+            entrySection.appendChild(changeDeleteTimeEnry)
+            entryListItem.appendChild(entrySection)
+            displayEntries.appendChild(entryListItem)
+
+            // clear input fields and reset timer
+            inputTitle.value = ''
+            projectSelect.value = ''
+            categorySelect.value = ''
+            timerInput.value = '00:00:00'
+            seconds = 0
     }
 
+    /* ----------------------------------------- deletes and updates all time intervals ----------------------------- */
+    dailyDeleteButton.addEventListener('click', async () => {
+        let response = await fetch('http://localhost:5501/dailyTime')
+        let dailyTime = await response.json()
+ 
+        let allEntries = displayEntries.children
+
+        for (let i = 0; i < allEntries.length; i++) {
+            allEntries[i].classList.toggle('hidden');
+        }
+        let updatedWeeklyTime = weeklySeconds - dailyTime[0].time
+        weeklyTotal.value = formatTime(updatedWeeklyTime)
+        weeklySeconds = updatedWeeklyTime
+        dailySeconds = 0
+        randomNumber = 1
+
+        await fetch(`http://localhost:5501/entries/all/${randomNumber}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        
+    })
+
+
+    /* ------------------------------------------ hides all entries ----------------------------------------------- */
+    dailyCollapseButton.addEventListener('click', () => {
+ 
+        let children = document.querySelectorAll(`li`)
+
+        if (entryDateForExistingEntries) {
+            for (let i = 0; i < children.length; i++) {
+                children[i].classList.toggle('hidden');
+            }
+        }
+    })
+
+    // ---------- event listener to open edit entry menu and grab the new entry values -------------
     changeButton.addEventListener('click', () => {
+        
         entriesContainer.classList.remove('hidden')
-    })
+        editEntryInput.value = entryTitleName.innerText 
+        entryCategorySelect.value = entryCategoryName.value
+        entryProjectSelect.value = entryProjectName.value
+        editEntryTotal.value = entryTimeNumber.value
 
-    cancelEdit.addEventListener('click', () => {
+        // --------------------------- event listener to delete an entry ---------------------------
+        deleteEntryButton.onclick = () => {
+            deleteAlertMessageContainer.classList.remove('hidden')
+            deleteMessage.innerText = "Are you sure you would like to delete this entry?"
+
+            cancelDeleteAlert.onclick = () => {
+                deleteAlertMessageContainer.classList.add('hidden')
+            }
+
+            // deletes the entry from the UI and the server and all the necessary messages
+            deleteAlert.onclick = () => {
+                deleteTheNewEntry(entryUIID, newEntry.entryTime)
+                
+            }   
+
+        } 
+
+        // --------------------------- event listener to edit an entry ---------------------------
+        editEntryButton.addEventListener('click', async () => { 
+                
+            // new name 
+            let newNameChange = editEntryInput.value
+
+            // new category
+            let newCategoryValue = entryCategorySelect.value
+            let newCategoryText = entryCategorySelect.options[entryCategorySelect.selectedIndex].text
+            if (newCategoryText === 'Category') {newCategoryText = ''}
+
+            // new project
+            let newProjectValue = entryProjectSelect.value
+            let newProjectText = entryProjectSelect.options[entryProjectSelect.selectedIndex].text
+            if (newProjectText === 'Project Name') {newProjectText = ''}
+
+            // new time
+            let newTime = editEntryTotal.value
+            let splitNewTime = newTime.split(':').join('')
+            let newTimeSeconds = splitNewTime.replace(/^0+|(?<=:0)0+/g, '')
+
+            // old time
+            let oldTime = newEntry.entryTime
+            let splitOldTime = oldTime.split(':').join('')
+            let oldTimeSeconds = splitOldTime.replace(/^0+|(?<=:0)0+/g, '')
+            
+            if (newTimeSeconds > oldTimeSeconds) {
+                let timeDifference = newTimeSeconds - oldTimeSeconds
+                // this is where we will add the time difference to the daily time and it will be daily time plus the newTimeSeconds
+                let response = await fetch('http://localhost:5501/dailyTime')
+                let grabTime = await response.json()
+                newTimeForServer = grabTime[0].time + timeDifference
+                
+            } else if (newTimeSeconds < oldTimeSeconds) {
+                let timeDifference = oldTimeSeconds - newTimeSeconds 
+                // this is where we will subtract the time difference to the daily time and it will be newTimeSeconds minus the daily time
+                let response = await fetch('http://localhost:5501/dailyTime')
+                let grabTime = await response.json()
+                newTimeForServer = grabTime[0].time - timeDifference
+                
+            } else if (newTimeSeconds === oldTimeSeconds) {
+                newTimeForServer = newTimeSeconds
+            }
+            
+            let date = newEntry.entryDate
+            
+
+            let timeToChangeTheDailyTotalTime = {
+                theTime: newTimeForServer
+            }
+
+            fetch('http://localhost:5501/dailyTime/change', {  
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(timeToChangeTheDailyTotalTime) 
+            })
+            
+            changeEntryValues(entryTitleName, newNameChange, newCategoryText, newProjectText, newTime, entryUIID, date, newTimeForServer, newProjectValue, newCategoryValue) 
+        })
+
+        // --------------------------- ansync function to change all the values -----------------------
+        async function changeEntryValues(entryTitleName, newNameChange, newCategoryText, newProjectText, newTime, entryUIID, date, newTimeForServer, newProjectValue, newCategoryValue) {
+            dailyTotalTimeOne.innerText = formatTime(newTimeForServer)
+
+            let editedEntryTime = dailyTotalTimeOne.innerText
+
+
+            entryTitleName.innerText = newNameChange
+            entryCategoryName.innerText = newCategoryText
+            entryProjectName.innerText = newProjectText
+            entryTimeNumber.innerText = newTime
+            dailySeconds = newTimeForServer
+            weeklyTotal.value = formatTime(newTimeForServer)
+            weeklySeconds = newTimeForServer
+            
+
+            let editedEntry = {
+                entryID: entryUIID,
+                entryTitle: entryTitleName.innerText,
+                entryDate: date,
+                entryProject: newProjectValue,
+                entryCategory: newCategoryValue,
+                entryTime: editedEntryTime,
+            }
+
+            fetch(`http://localhost:5501/entries/${entryUIID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(editedEntry)
+            })
+
+            alertMessageContainer.classList.remove('hidden')
+            message.innerText = 'Awesome! Your entry has been updated.'
+
+            entriesContainer.classList.add('hidden')
+        }
+
+
+        /* --------------- async function that deletes the entry -------------------------------------- */
+        async function deleteTheNewEntry(entryUIID, oldTime) {
+            
+            if (displayEntries.children.length === 1) {  
+                alertMessageContainer.classList.remove('hidden')
+                message.innerText = 'There is only one entry left. You must delete the whole day. In your entry list, this will be the trash icon.'
+                deleteAlertMessageContainer.classList.add('hidden')
+                closeAlert.onclick = () => {
+                    entriesContainer.classList.add('hidden')
+                }  
+            } else if (displayEntries.children.length > 1) {
+                let entryToRemove = document.querySelector(`li[data-entry-id="${entryUIID}"]`)
+                // deletes the entry from the UI
+                if (entryToRemove) {
+                    entryToRemove.parentNode.removeChild(entryToRemove)
+                }
+                // message modal
+                deleteAlertMessageContainer.classList.add('hidden')
+                entriesContainer.classList.add('hidden')
+                // message modal
+                alertMessageContainer.classList.remove('hidden')
+                message.innerText = 'Entry has been deleted!'
+
+                // old time
+                let splitOldTime = oldTime.split(':').join('')
+                let oldTimeSeconds = splitOldTime.replace(/^0+|(?<=:0)0+/g, '')
+ 
+                // updates the time in the UI
+                let response = await fetch('http://localhost:5501/dailyTime')
+                let grabTime = await response.json()
+                // helps us get the correct time to use for the UI
+                let newTimeAfterDeletionForServer = grabTime[0].time - oldTimeSeconds
+                // displays the new time in the UI
+                dailyTotalTimeOne.innerText = formatTime(newTimeAfterDeletionForServer)
+                // updates the timer for the daily total time
+                dailySeconds = newTimeAfterDeletionForServer
+                weeklyTotal.value = formatTime(newTimeAfterDeletionForServer)
+                weeklySeconds = newTimeAfterDeletionForServer
+                
+
+                let timeToChangeTheDailyTotalTime = { 
+                    theTime: newTimeAfterDeletionForServer
+                }
+    
+                fetch('http://localhost:5501/dailyTime/change', {  
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(timeToChangeTheDailyTotalTime)
+                })
+
+                // deletes the entry from the server
+                fetch(`http://localhost:5501/entries/${entryUIID}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+            } 
+        }
+    })
+} /* ----------------------------------------- end of creating an entry ---------------------------- */
+
+
+// close edit entry modal
+cancelEdit.addEventListener('click', () => {
     entriesContainer.classList.add('hidden')
-    })
-
-}
+})
 
 
 // toggles the categories and projects containers when clicked
+// categories
 categories.addEventListener('click', () => {
-    categoriesContainer.classList.toggle('hidden')
+    categoriesContainer.classList.remove('hidden')
 })
-
-
+cancelCategories.addEventListener('click', () => {
+    categoriesContainer.classList.add('hidden')
+})
+// projects
 projects.addEventListener('click', () => {
-    projectsContainer.classList.toggle('hidden')
+    projectsContainer.classList.remove('hidden')
 })
-
+cancelProject.addEventListener('click', () => {
+    projectsContainer.classList.add('hidden')
+})
+// alert modal
 closeAlert.addEventListener('click', () => {
     alertMessageContainer.classList.add('hidden')
 })
@@ -387,6 +667,7 @@ addCategoryForm.addEventListener('submit', async (e) => {
             categorySelect.appendChild(categoryOption)
             deleteCategorySelect.appendChild(categoryOption.cloneNode(true))
             editCategorySelect.appendChild(categoryOption.cloneNode(true))
+            entryCategorySelect.appendChild(categoryOption.cloneNode(true))
             addCategoryInput.value = ''
         })
     }
@@ -414,6 +695,7 @@ deleteCategoryForm.addEventListener('submit', async (e) => {
             removeCategoryFromSelect(categorySelect, categoryToDelete)
             removeCategoryFromSelect(deleteCategorySelect, categoryToDelete)
             removeCategoryFromSelect(editCategorySelect, categoryToDelete)
+            removeCategoryFromSelect(entryCategorySelect, categoryToDelete)
 
             function removeCategoryFromSelect(selectOption, categoryName) {
                 for (let i = 0; i < selectOption.options.length; i++) {
@@ -442,8 +724,6 @@ editCategorySelect.addEventListener('change', async () => {
 editCategoryForm.addEventListener('submit', async (e) => {
     e.preventDefault()
 
-    // console.log(editCategoryInput.value, editCategorySelect.value)
-
     let editedCategory = {
         categoryName: editCategoryInput.value,
     }
@@ -458,11 +738,11 @@ editCategoryForm.addEventListener('submit', async (e) => {
     .then(() => {
         // edits the option from each of the category select elements
         let categoryToChange = editCategorySelect.options[editCategorySelect.selectedIndex].text
-        console.log(categoryToChange)
 
         changeCategorySelectOption(categorySelect, categoryToChange)
         changeCategorySelectOption(deleteCategorySelect, categoryToChange)
         changeCategorySelectOption(editCategorySelect, categoryToChange)
+        changeCategorySelectOption(entryCategorySelect, categoryToChange)
 
         function changeCategorySelectOption(selectOptions, categoryToChange) {
             for (let i = 0; i < selectOptions.options.length; i++) {
@@ -515,6 +795,7 @@ addProjectForm.addEventListener('submit', async (e) => {
             projectSelect.appendChild(projectOption)
             deleteProjectSelect.appendChild(projectOption.cloneNode(true))
             editProjectSelect.appendChild(projectOption.cloneNode(true))
+            entryProjectSelect.appendChild(projectOption.cloneNode(true))
             addProjectInput.value = ''
         })
     }
@@ -541,6 +822,7 @@ deleteProjectForm.addEventListener('submit', async (e) => {
             removeProjectOption(projectSelect, ProjectToDelete)
             removeProjectOption(deleteProjectSelect, ProjectToDelete)
             removeProjectOption(editProjectSelect, ProjectToDelete)
+            removeProjectOption(entryProjectSelect, ProjectToDelete)
 
             function removeProjectOption(selectOption, projectName) {
                 for (let i = 0; i < selectOption.options.length; i++) {
@@ -587,6 +869,7 @@ editProjectForm.addEventListener('submit', async (e) => {
         changeProjectOption(projectSelect, projectToChange)
         changeProjectOption(deleteProjectSelect, projectToChange)
         changeProjectOption(editProjectSelect, projectToChange)
+        changeProjectOption(entryProjectSelect, projectToChange)
 
         function changeProjectOption(selectOptions, projectToChange) {
             for (let i = 0; i < selectOptions.options.length; i++) {

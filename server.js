@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
   
 //     {
 //         entryID: 1, 
-//         entryTitle: 'working on designs',
+//         entryTitle: 'working on designs', 
 //         entryDate: '11/26/2023',
 //         entryProject: 'Adobe Developer Team',
 //         entryCategory: 'Work',
@@ -28,6 +28,12 @@ app.use(bodyParser.urlencoded({ extended: true }))
 //         entryTime: '00:01:00',
 //     },
 // ]
+
+let dailyTotalTime = [
+    {
+        time: 0
+    },
+]
 
 let entries = []
 
@@ -72,24 +78,44 @@ app.get('/projects', (req, res) => {
 
 // Post request to add new entry
 app.post('/entry', (req, res) => {
-    let newEntryID = entries.length === 0 ? 1 : entries.at(-1).entryID + 1
+    // let newEntryID = entries.length === 0 ? 1 : entries.at(-1).entryID + 1
 
     let turnProjectToNumber = parseInt(req.body.entryProject)
     let turnCategoryToNumber = parseInt(req.body.entryCategory)
+    if (isNaN(turnProjectToNumber)) {turnProjectToNumber = 0}
+    if (isNaN(turnCategoryToNumber)) {turnCategoryToNumber = 0}
 
     let newEntry = {
-        entryID: newEntryID,
-        entryTitle: req.body.entryTitle,
+        entryID: req.body.entryID,
+        entryTitle: req.body.entryTitle, 
         entryDate: req.body.entryDate,
         entryProject: turnProjectToNumber,
         entryCategory: turnCategoryToNumber,
         entryTime: req.body.entryTime,
     }
-
+ 
     entries = [...entries, newEntry]
     res.send(entries)
-    console.log(entries)
+    console.log(entries) 
 }) 
+
+app.post('/dailyTime', (req, res) => {
+    newTime = req.body.dailyTime  
+
+    dailyTotalTime[0].time = newTime
+    
+//    console.log(dailyTotalTime[0].time)
+})
+
+app.get('/dailyTime', (req, res) => {
+    res.send(dailyTotalTime)
+})
+
+app.post('/dailyTime/change', (req, res) => {
+    let timeToChange = parseInt(req.body.theTime)
+    dailyTotalTime[0].time = timeToChange
+    console.log(timeToChange)
+})
 
 // Post request to add new category
 app.post('/category', (req, res) => {
@@ -155,6 +181,54 @@ app.put('/projects/:projectID', (req, res) => {
 
     console.log(projects) 
     res.send(projects)
+})
+
+// put request to update an entry
+app.put('/entries/:entryID', (req, res) => {
+    let entryToUpdate = parseInt(req.params.entryID)
+    let turnProjectToNumber = parseInt(req.body.entryProject)
+    let turnCategoryToNumber = parseInt(req.body.entryCategory)
+
+    if (isNaN(turnProjectToNumber)) {turnProjectToNumber = 0}
+    if (isNaN(turnCategoryToNumber)) {turnCategoryToNumber = 0}
+
+    let newEntry = {
+        entryID: entryToUpdate, 
+        entryTitle: req.body.entryTitle, 
+        entryDate: req.body.entryDate,
+        entryProject: turnProjectToNumber,
+        entryCategory: turnCategoryToNumber, 
+        entryTime: req.body.entryTime,
+    
+    }
+
+    let entryWereReplacing = entries.find(entry => entry.entryID == entryToUpdate)
+    entryWereReplacing = newEntry
+    
+
+    console.log(entryWereReplacing) 
+    res.send(entries)
+})
+
+// delete request to delete an entry
+app.delete('/entries/:entryID', (req, res) => {
+    let entryToDelete = parseInt(req.params.entryID)
+
+    let newSetOfEntries = entries.filter(entry => entry.entryID != entryToDelete)
+
+    entries = [...newSetOfEntries]
+    
+    // console.log(entries) 
+    res.send(entries)
+})
+
+// delete request to delete all entries
+app.delete('/entries/all/:entryID', (req, res) => {
+
+    let random = req.params.entryID
+    entries = []
+    
+    res.send(console.log(entries))
 })
  
 app.listen(port, () => {

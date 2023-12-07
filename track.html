@@ -7,118 +7,174 @@
     <script src="https://kit.fontawesome.com/e5ff2f4c45.js" crossorigin="anonymous"></script>
     <title>Tracking App</title>
 </head>
-<body class="m-4">
+<body class="m-4 bg-slate-100">
     <!-- title, timer, play, and stop buttons -->
     <div class="flex justify-between">
 
-        <input class="inputTitle ring-2 ring-black p-1 basis-8/12 mr-1" type="text" placeholder="Title..."/>
+        <div class="basis-8/12">
+            <input class="inputTitle border-b-2 bg-inherit border-emerald-400 p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Title..."/>
+        </div>
 
-        <input class="timerInput text-slate-300 outline-0 text-center text-2xl" type="text" value="00:00:00" readonly/>
+        <div class="basis-3/12">
+            <input class="timerInput text-slate-300 outline-0 text-center bg-inherit text-xl pt-5" type="text" value="00:00:00" readonly/>
+        </div>
         
-        <div class="rounded-full start">
+        <div class="rounded-full start basis-1/12 flex justify-end">
             <button class="">
-                <i class="fa-solid fa-play bg-slate-300 p-3 rounded-full"></i>
+                <i class="fa-solid fa-play ring-2 ring-emerald-400 py-3 px-4 rounded-full text-md text-emerald-200 hover:bg-emerald-400 hover:text-emerald-100"></i>
             </button>
         </div>
 
-        <div class="hidden stop">
-            <button class="">
-                <i class="fa-solid fa-stop bg-slate-300 p-3 rounded-full"></i>
-            </button>
+        <div class="hidden stop basis-1/12 flex justify-end rounded-full">
+            <div class="">
+                <button  class="">
+                    <i class="fa-solid fa-stop ring-2 ring-emerald-400 py-3 px-4 rounded-full text-lg text-emerald-200 hover:bg-emerald-400 hover:text-emerald-100 mt-2"></i>
+                </button>
+            </div>
         </div>
         
     </div>
 
     <!-- Category select -->
-    <select class="categorySelect ring-2 ring-black p-1 w-full mt-6 mb-2 py-2">
-        <option value="">Category</option>
+    <select class="categorySelect text-slate-400 focus:text-black border-b-2 bg-inherit border-emerald-400 p-1 w-full my-4 py-2 pt-2 mt-1 outline-none">
+        <option class="" value="">Category</option>
     </select>
 
     <!-- Project name select -->
-    <select class="projectSelect ring-2 ring-black p-1 w-full my-4 py-2">
+    <select class="projectSelect text-slate-400 focus:text-black border-b-2 bg-inherit border-emerald-400 p-1 w-full my-4 py-2 pt-2 mt-1 outline-none">
         <option value="">Project Name</option>
     </select>
 
-    <div class="border-b-2 mt-4 mb-16"></div>
+    <div class="border-b-2 mt-16 mb-16 border-slate-200"></div>
 
     <!------------------- modal that displays a message --------------------->
-    <div class="alertMessageContainer absolute z-30 w-full right-0 hidden">
-        <div class="shadow-md bg-slate-100 ring-2 w-8/12 mx-auto mt-4 p-4 mb-4 rounded-md">
+    <div class="alertMessageContainer absolute z-40 w-full right-0 hidden">
+        <div class="shadow-md bg-slate-100 ring-2 ring-emerald-400 w-8/12 mx-auto mt-4 p-4 mb-4 rounded-md">
             <h1 class="text-center text-red-500 font-bold text-xl">Alert</h1>
             <div class="border-b-2 mt-4 mb-4"></div>
             <p class="message px-4 text-center mb-4"></p>
             <div class="flex justify-center">
-                <button class="closeAlert ring-2 py-1 px-4 rounded-md">close</button>
+                <button class="closeAlert ring-2 ring-emerald-400 py-1 px-4 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50">close</button>
             </div>
         </div>
     </div>
 
+    <!------- modal for deleting entry that displays a message ------------->
+    <div class="deleteAlertMessageContainer absolute z-30 w-full right-0 hidden">
+        <div class="shadow-md bg-slate-100 ring-2 w-8/12 ring-emerald-400 mx-auto mt-4 p-4 mb-4 rounded-md">
+            <h1 class="text-center text-red-500 font-bold text-xl">Alert</h1>
+            <div class="border-b-2 mt-4 mb-4"></div>
+            <p class="deleteMessage px-4 text-center mb-4"></p> 
+            <div class="flex justify-center">
+                <button class="cancelDeleteAlert ring-2 ring-emerald-400 py-1 px-4 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50 mr-4">Cancel</button>
+                <button class="deleteAlert ring-2 text-red-500 ring-red-500 py-1 px-4 rounded-md hover:text-red-50 hover:bg-red-500">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="flex justify-end">
+        <div class="">
+            <label for="Project Name Button" class="text-xs">Projects</label>
+            <label for="Category Button" class="text-xs">Categories</label>
+        </div>
+    </div> -->
 
     <!-- category and project name edit buttons and edit entries -->
-    <div class="float-right">
-        <label for="Category Button" class="text-sm">Categories</label>
-        <button><i class="fa-solid fa-table-columns categories static"></i></button>
+    <div class="flex flex-wrap">
+
+        <div class="basis-10/12">
+            <!-- weekly total timer -->
+            <div class="flex justify-center">
+                <div class="flex">
+                    <p class="text-emerald-400">Weekly Total</p>
+    
+                    <input class="weeklyTotal  text-slate-300 outline-0 text-center bg-inherit text-xl" type="text" value="00:00:00" readonly/>
+                </div>
+            </div>
+        </div>
+
+        <div class="basis-1/12">
+            <div class="float-right">
+                <div class="flex">
+                    <div class="">
+                        <button><i class="fa-solid fa-table-columns categories static text-xl text-emerald-400 mr-5 hover:text-emerald-600"></i></button>
+                    </div>
+                    
+                    <div class="float-right">
+                        <button><i class="projects fa-solid fa-file-pen text-xl text-emerald-400 ml-4 hover:text-emerald-600"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
 
         <div class="categoriesContainer absolute z-10 w-full right-0 hidden">
 
-            <div class="InnerCategoriesContainer shadow-md bg-slate-100 ring-2 mx-4 mt-4 p-4  mb-4">
+            <div class="InnerCategoriesContainer rounded-md shadow-md bg-slate-50 ring-2 ring-emerald-400 mx-4 mt-4 p-4  mb-4">
+
+                <!-- cancel button -->
+                <button class="cancelCategories float-right">
+                    <i class="fa-solid fa-circle-xmark text-emerald-400 text-xl hover:text-emerald-600"></i> 
+                </button>
 
                 <!-- categories title -->
                 <div class="flex justify-center">
-                    <h2 class="font-bold uppercase">Categories</h2>
-                    <i class="fa-solid fa-table-columns ml-4 mt-1"></i>
+                    <h2 class="font-bold uppercase text-emerald-600">Categories</h2>
+                    <i class="fa-solid fa-table-columns ml-4 mt-1 text-emerald-600 text-xl"></i>
                 </div>
 
                 <!-- add -->
                 <form class="addCategoryForm flex flex-wrap justify-between">
                     <div class="basis-full">
-                        <p class="text-sm">Add a Category</p>
+                        <p class="text-sm text-emerald-300">Add a Category</p>
                     </div>
                     
                     <div class="basis-10/12">
-                        <input class="addCategoryInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Category Name..."/>
+                        <input class="addCategoryInput border-b-2 border-emerald-400 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Category Name..."/>
                     </div>
 
                     <div class="basis-1/12">
-                        <input class="addCategoryButton" type="submit" value="Add"/>
+                        <input class="addCategoryButton ring-2 ring-emerald-400 py-1 px-4 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50 mt-3" type="submit" value="Add"/>
                     </div>
                 </form>
 
                 <!-- delete -->
                 <form class="deleteCategoryForm flex flex-wrap justify-between">
                     <div class="basis-full">
-                        <p class="text-sm">Delete a Category</p>
+                        <p class="text-sm text-emerald-300">Delete a Category</p>
                     </div>
                     
                     <div class="basis-10/12">
-                        <select class="deleteCategorySelect border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
+                        <select class="deleteCategorySelect border-emerald-400 text-slate-400 focus:text-black border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
                             <option value="">Categories</option>
                         </select>
                     </div>
 
                     <div class="basis-1/12">
-                        <input class="deleteCategoryButton" type="submit" value="Delete"/>
+                        <input class="deleteCategoryButton ring-2 ring-emerald-400 py-1 px-2 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50 mt-3" type="submit" value="Delete"/>
                     </div>
                 </form>
 
                 <!-- edit -->
                 <form class="editCategoryForm flex flex-wrap justify-between">
                     <div class="basis-full">
-                        <p class="text-sm">Edit a Category</p>
+                        <p class="text-sm text-emerald-300">Edit a Category</p>
                     </div>
                     
                     <div class="basis-5/12">
-                        <select class="editCategorySelect border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
+                        <select class="editCategorySelect border-emerald-400 text-slate-400 focus:text-black border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
                             <option value="">Categories</option>
                         </select>
                     </div>
 
                     <div class="basis-5/12">
-                        <input class="editCategoryInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" readonly/>
+                        <input class="editCategoryInput border-emerald-400 border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" readonly/>
                     </div>
 
                     <div class="basis-1/12">
-                        <input class="editCategoryButton" type="submit" value="Change"/>
+                        <input class="editCategoryButton ring-2 ring-emerald-400 py-1 px-1 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50 mt-3" type="submit" value="Change"/>
                     </div>
                 </form>
             </div>
@@ -126,69 +182,72 @@
         </div>
 
         <!---------------------- PROJECTS SECION ------------------------------>
-        <label for="Project Name Button" class="text-sm">Projects</label>
-        <button><i class="projects fa-solid fa-file-pen"></i></button>
 
-        <div class="projectsContainer absolute z-10 w-full right-0 hidden"><!-- hidden -->
+        <div class="projectsContainer absolute z-10 w-full right-0 hidden"><!-- hidden --> 
 
-            <div class="InnerProjectsContainer shadow-md bg-slate-100 ring-2 mx-4 mt-4 p-4  mb-4">
+            <div class="InnerProjectsContainer rounded-md shadow-md bg-slate-50 ring-2 ring-emerald-400 mx-4 mt-4 p-4  mb-4">
+
+                <!-- cancel button -->
+                <button class="cancelProject float-right">
+                    <i class="fa-solid fa-circle-xmark text-emerald-400 text-xl hover:text-emerald-600"></i> 
+                </button>
 
                 <!-- project title -->
                 <div class="flex justify-center">
-                    <h2 class="font-bold uppercase">Projects</h2>
-                    <i class="fa-solid fa-file-pen ml-4 mt-1"></i>
+                    <h2 class="font-bold uppercase text-emerald-600">Projects</h2>
+                    <i class="fa-solid fa-file-pen ml-4 mt-1 text-emerald-600 text-xl"></i>
                 </div>
 
                 <!-- add -->
                 <form class="addProjectForm flex flex-wrap justify-between">
                     <div class="basis-full">
-                        <p class="text-sm">Add a Project</p>
+                        <p class="text-sm text-emerald-300">Add a Project</p>
                     </div>
                     
                     <div class="basis-10/12">
-                        <input class="addProjectInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Project Name..."/>
+                        <input class="addProjectInput border-b-2 border-emerald-400 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Project Name..."/>
                     </div>
 
                     <div class="basis-1/12">
-                        <input class="addProjectButton" type="submit" value="Add"/>
+                        <input class="addProjectButton ring-2 ring-emerald-400 py-1 px-4 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50 mt-3" type="submit" value="Add"/>
                     </div>
                 </form>
 
                 <!-- delete -->
                 <form class="deleteProjectForm flex flex-wrap justify-between">
                     <div class="basis-full">
-                        <p class="text-sm">Delete a Project</p>
+                        <p class="text-sm text-emerald-300">Delete a Project</p>
                     </div>
                     
                     <div class="basis-10/12">
-                        <select class="deleteProjectSelect border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
+                        <select class="deleteProjectSelect border-emerald-400 text-slate-400 focus:text-black border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
                             <option value="">Projects</option>
                         </select>
                     </div>
 
                     <div class="basis-1/12">
-                        <input class="deleteProjectButton" type="submit" value="Delete"/>
+                        <input class="deleteProjectButton ring-2 ring-emerald-400 py-1 px-2 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50 mt-3" type="submit" value="Delete"/>
                     </div>
                 </form>
 
                 <!-- edit -->
                 <form class="editProjectForm flex flex-wrap justify-between">
                     <div class="basis-full">
-                        <p class="text-sm">Edit a Project</p>
+                        <p class="text-sm text-emerald-300">Edit a Project</p>
                     </div>
                     
                     <div class="basis-5/12">
-                        <select class="editProjectSelect border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
+                        <select class="editProjectSelect border-emerald-400 text-slate-400 focus:text-black border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text">
                             <option value="">Projects</option>
                         </select>
                     </div>
 
                     <div class="basis-5/12">
-                        <input class="editProjectInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" readonly/>
+                        <input class="editProjectInput border-emerald-400 border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" readonly/>
                     </div>
 
                     <div class="basis-1/12">
-                        <input class="editProjectButton" type="submit" value="Change"/>
+                        <input class="editProjectButton ring-2 ring-emerald-400 py-1 px-1 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50 mt-3" type="submit" value="Change"/>
                     </div>
                 </form>
             </div>
@@ -197,82 +256,81 @@
 
 
         <!---------------------- ENTRIES SECION ------------------------------>
-        <div class="entriesContainer absolute z-10 w-full right-0 hidden"><!-- hidden -->
+        <div class="entriesContainer absolute z-10 w-full right-0 hidden"><!--hidden-->
 
-            <div class="InnerEntriesContainer shadow-md bg-slate-100 ring-2 mx-4 mt-4 p-4  mb-4">
+            <div class="InnerEntriesContainer rounded-md shadow-md bg-slate-50 ring-2 ring-emerald-400 mx-4 mt-4 p-4  mb-4">
 
                 <!-- cancel button -->
-                <button class="cancelEdit flex justify-end">
-                    <i class="fa-solid fa-circle-xmark"></i>
+                <button class="cancelEdit float-right">
+                    <i class="fa-solid fa-circle-xmark text-emerald-400 text-xl hover:text-emerald-600"></i> 
                 </button>
 
                 <!-- Entry title -->
                 <div class="flex justify-center">
-                    <h2 class="font-bold uppercase">Edit</h2>
-                    <i class="fa-solid fa-wrench ml-4 mt-1"></i>
+                    <h2 class="font-bold uppercase text-emerald-600">Edit</h2>
+                    <i class="fa-solid fa-wrench ml-4 mt-1 text-emerald-600 text-xl"></i>
                 </div>
 
 
                 <!-- edit entry -->
-                <form class="editEntryForm flex flex-wrap justify-between">
+                <div class="editEntryForm flex flex-wrap justify-center">
                     <!-- entry name -->
                     <div class="basis-full">
-                        <p class="text-sm">Edit Name</p>
+                        <p class="text-sm text-emerald-300">Edit Name</p>
                     </div>
 
-                    <div class="">
-                        <input class="editEntryInput border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" />
+                    <div class="basis-full">
+                        <input class="editEntryInput border-b-2 border-emerald-400 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" />
                     </div>
 
 
                     <!-- entry category -->
                     <div class="basis-full">
-                        <p class="text-sm">Edit Category</p>
+                        <p class="text-sm text-emerald-300">Edit Category</p>
                     </div>
 
-                    <select class="entryCategorySelect ring-2 ring-black p-1 w-full mt-6 mb-2 py-2">
+                    <select class="entryCategorySelect border-emerald-400 text-slate-400 focus:text-black border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none">
                         <option value="">Category</option>
                     </select>
 
 
                     <!-- entry project name -->
                     <div class="basis-full">
-                        <p class="text-sm">Edit Project Name</p>
+                        <p class="text-sm text-emerald-300">Edit Project Name</p>
                     </div>
 
-                    <select class="entryProjectSelect ring-2 ring-black p-1 w-full my-4 py-2">
+                    <select class="entryProjectSelect border-emerald-400 text-slate-400 focus:text-black border-b-2 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none">
                         <option value="">Project Name</option>
                     </select>
 
 
                     <!-- entry time -->
                     <div class="basis-full">
-                        <p class="text-sm">Edit Entry Time</p>
+                        <p class="text-sm text-emerald-300">Edit Entry Time</p>
                     </div>
 
-                    <input class="editEntryTotal text-slate-300 outline-0 text-center" type="text" value="00:00:00" />
+                    <div class=" basis-full pt-1">
+                        <input class="editEntryTotal border-emerald-400 text-slate-400 focus:text-black border-b-2 bg-inherit ring-black p-1 my-4 py-2 pt-2 mt-1 outline-none text-center" type="text" value="00:00:00" />
+                    </div> 
 
 
-                    <div class="">
-                        <button class="deleteEntryButton">Delete Entry</button>
+                    <div class="basis-full flex justify-end">
+                        <div class="mr-4">
+                            <button class="deleteEntryButton ring-2 py-1 px-4 rounded-md ring-red-500 text-red-500 hover:bg-red-500 hover:text-white">Delete Entry</button>
+                        </div>
+    
+                        <div class="">
+                            <input class="editEntryButton ring-2 ring-emerald-400 py-1 px-4 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50" type="submit" value="Save"/>
+                        </div>
                     </div>
-
-                    <div class="">
-                        <input class="editEntryButton" type="submit" value="Save"/>
-                    </div>
-                </form>
+                </div>
 
             </div> <!-- end of inner entries container -->
         </div> <!-- end of entries container -->
     </div> <!-- end of project, category, entry edits -->
 
 
-    <!-- weekly total timer -->
-    <div class="flex justify-center">
-        <p class="text-red-400">Weekly Total</p>
-
-        <input class="weeklyTotal text-slate-300 outline-0 text-center" type="text" value="00:00:00" readonly/>
-    </div>
+    
 
     <!-- Time entry sections -->
     <ul class="displayEntries"></ul>
