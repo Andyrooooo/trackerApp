@@ -10,8 +10,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
   // - Testing variable for temp time entries -
 // let entries = [
-  
-//     {
+   
+//     {  
 //         entryID: 1, 
 //         entryTitle: 'working on designs', 
 //         entryDate: '11/26/2023',
@@ -104,7 +104,7 @@ app.post('/dailyTime', (req, res) => {
 
     dailyTotalTime[0].time = newTime
     
-//    console.log(dailyTotalTime[0].time)
+res.send(dailyTotalTime)
 })
 
 app.get('/dailyTime', (req, res) => {
@@ -115,6 +115,7 @@ app.post('/dailyTime/change', (req, res) => {
     let timeToChange = parseInt(req.body.theTime)
     dailyTotalTime[0].time = timeToChange
     console.log(timeToChange)
+    res.send(dailyTotalTime)
 })
 
 // Post request to add new category
@@ -192,11 +193,11 @@ app.put('/entries/:entryID', (req, res) => {
     if (isNaN(turnProjectToNumber)) {turnProjectToNumber = 0}
     if (isNaN(turnCategoryToNumber)) {turnCategoryToNumber = 0}
 
-    let newEntry = {
+    let newEntry = { 
         entryID: entryToUpdate, 
         entryTitle: req.body.entryTitle, 
-        entryDate: req.body.entryDate,
-        entryProject: turnProjectToNumber,
+        entryDate: req.body.entryDate, 
+        entryProject:  turnProjectToNumber,
         entryCategory: turnCategoryToNumber, 
         entryTime: req.body.entryTime,
     

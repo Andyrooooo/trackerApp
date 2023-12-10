@@ -43,6 +43,7 @@ let deleteAlert = document.querySelector('.deleteAlert')
 let cancelDeleteAlert = document.querySelector('.cancelDeleteAlert')
 /* ------------------------------------ end of element creations -------------------------------------------------- */
 
+
 // showEntries()
 grabCategories()
 grabProjects() 
@@ -210,7 +211,7 @@ stopButton.addEventListener('click', async (e) => {
     
     .then(() => {
         // we then pass the new object and project and category names to the createNewEntry function
-        createNewEntry(newEntry, selectedProjectName, selectedCategoryName, entryData, newTime)
+        createNewEntry(newEntry, selectedProjectName, selectedCategoryName, entryData)
     }) 
 })
 
@@ -318,24 +319,24 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
         grabTime()
                 // This will display our date, total daily time, delete button, and collapse button
             let dailyInfoBar = document.createElement("div")
-            dailyInfoBar.classList.add('flex', 'flex-row', 'bg-emerald-400', 'mt-4', 'p-4', 'text-emerald-50')
+            dailyInfoBar.classList.add('flex', 'flex-row', 'bg-emerald-400', 'p-4', 'text-emerald-50')
  
             // date of info bar
             let dailyDate = document.createElement("p")
             let dailyDateContainer = document.createElement("div")
             dailyDateContainer.appendChild(dailyDate)
             dailyDateContainer.classList.add('basis-7/12', 'float-right')
-            // dailyDate.classList.add('text-right', 'w-full')
+            // dailyDate.classList.add('text-right', 'w-full') 
             dailyDate.innerText = newEntry.entryDate
 
-            // total daily time of info bar
+            // total daily time of info bar 
             let dailyTotalTimeOneContainer = document.createElement("div")
             dailyTotalTimeOneContainer.classList.add('basis-3/12')
-              
+               
             dailyTotalTimeOneContainer.appendChild(dailyTotalTimeOne)
             
             dailyTotalTimeOne.classList.add('float-right')
-            // formats and updates the daily total time
+            // formats and updates the daily total time 
             
 
             // delete button of info bar
@@ -348,7 +349,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
             let dailyCollapseButtonContainer = document.createElement("div")
             dailyCollapseButtonContainer.appendChild(dailyCollapseButton)
             dailyCollapseButtonContainer.classList.add('basis-1/12')
-            dailyCollapseButton.classList.add('fa-solid', 'fa-chevron-up', 'float-right', 'text-xl', 'hover:text-emerald-200')
+            dailyCollapseButton.classList.add('fa-solid', 'fa-chevron-up', 'float-right', 'text-xl', 'hover:text-emerald-200', 'hidden')
 
             // MORE appends
             dailyInfoBar.appendChild(dailyDateContainer)
@@ -380,11 +381,14 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
         let response = await fetch('http://localhost:5501/dailyTime')
         let dailyTime = await response.json()
  
-        let allEntries = displayEntries.children
+        // let allEntries = displayEntries.children
 
-        for (let i = 0; i < allEntries.length; i++) {
-            allEntries[i].classList.toggle('hidden');
-        }
+        // console.log(allEntries)
+
+        // for (let i = 0; i < allEntries.length; i++) {
+        //     allEntries[i].remove()
+        // }
+        displayEntries.innerHTML = ''
         let updatedWeeklyTime = weeklySeconds - dailyTime[0].time
         weeklyTotal.value = formatTime(updatedWeeklyTime)
         weeklySeconds = updatedWeeklyTime
@@ -411,7 +415,10 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
                 children[i].classList.toggle('hidden');
             }
         }
+
     })
+
+
 
     // ---------- event listener to open edit entry menu and grab the new entry values -------------
     changeButton.addEventListener('click', () => {
