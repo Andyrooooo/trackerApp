@@ -188,8 +188,8 @@ app.put('/projects/:projectID', (req, res) => {
 app.put('/entries/:entryID', (req, res) => {
     let entryToUpdate = parseInt(req.params.entryID)
     let turnProjectToNumber = parseInt(req.body.entryProject)
-    let turnCategoryToNumber = parseInt(req.body.entryCategory)
-
+    let turnCategoryToNumber = parseInt(req.body.entryCategory) 
+ 
     if (isNaN(turnProjectToNumber)) {turnProjectToNumber = 0}
     if (isNaN(turnCategoryToNumber)) {turnCategoryToNumber = 0}
 

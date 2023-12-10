@@ -551,14 +551,14 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
         /* --------------- async function that deletes the entry -------------------------------------- */
         async function deleteTheNewEntry(entryUIID, oldTime) {
             
-            if (displayEntries.children.length === 1) {  
+            if (displayEntries.children.length === 2) {  
                 alertMessageContainer.classList.remove('hidden')
                 message.innerText = 'There is only one entry left. You must delete the whole day. In your entry list, this will be the trash icon.'
                 deleteAlertMessageContainer.classList.add('hidden')
                 closeAlert.onclick = () => {
                     entriesContainer.classList.add('hidden')
                 }  
-            } else if (displayEntries.children.length > 1) {
+            } else if (displayEntries.children.length > 2) {
                 let entryToRemove = document.querySelector(`li[data-entry-id="${entryUIID}"]`)
                 // deletes the entry from the UI
                 if (entryToRemove) {
