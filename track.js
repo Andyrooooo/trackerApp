@@ -57,7 +57,7 @@ let displayNotes = document.querySelector('.displayNotes')
 
 /* -------------------------- category options ---------------------------  */
 async function grabCategories() {
-    let response = await fetch('http://localhost:5501/categories')
+    let response = await fetch('https://tracker-app-server.vercel.app/categories')
     let categoryData = await response.json()
 
     categoryData.forEach(category => {
@@ -74,7 +74,7 @@ async function grabCategories() {
 
 // async function to create options for the project name select element
 async function grabProjects() {
-    let response = await fetch('http://localhost:5501/projects')
+    let response = await fetch('https://tracker-app-server.vercel.app/projects')
     let projectData = await response.json()
 
     projectData.forEach(project => {
@@ -93,7 +93,7 @@ async function grabProjects() {
 async function checkDate() {
     let currentDate = new Date()
     let startDate = new Date().toLocaleDateString()
-    let response = await fetch('http://localhost:5501/entries')
+    let response = await fetch('https://tracker-app-server.vercel.app/entries')
     let entryDates = await response.json()
     let checkDailyDates = entryDates.some(entry => entry.entryDate === startDate)
     if (!checkDailyDates) { dailySeconds = 0 }
@@ -169,7 +169,7 @@ function colons(number) {
 
 // stops the timer when the stop button is clicked and we also hide the stop button after
 stopButton.addEventListener('click', async (e) => {
-    let response = await fetch('http://localhost:5501/entries')
+    let response = await fetch('https://tracker-app-server.vercel.app/entries')
     let entryData = await response.json()
 
     e.preventDefault()
@@ -199,7 +199,7 @@ stopButton.addEventListener('click', async (e) => {
         dailyTime: totalDailyTime
     }
 
-    fetch('http://localhost:5501/dailyTime', {
+    fetch('https://tracker-app-server.vercel.app/dailyTime', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -207,7 +207,7 @@ stopButton.addEventListener('click', async (e) => {
         body: JSON.stringify(newTime)
     })
     
-    fetch('http://localhost:5501/entry', {
+    fetch('https://tracker-app-server.vercel.app/entry', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -302,7 +302,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
     // conditioning to check if the entry date already exists and update the daily total time
     if (existingEntryDate) {
         async function grabTime() {
-            let response = await fetch('http://localhost:5501/dailyTime')
+            let response = await fetch('https://tracker-app-server.vercel.app/dailyTime')
             let grabTime = await response.json()
             dailyTotalTimeOne.innerText = formatTime(grabTime[0].time)
 
@@ -319,7 +319,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
     else if (!existingEntryDate) 
     {
         async function grabTime() {
-            let response = await fetch('http://localhost:5501/dailyTime')
+            let response = await fetch('https://tracker-app-server.vercel.app/dailyTime')
             let grabTime = await response.json()
             dailyTotalTimeOne.innerText = formatTime(grabTime[0].time)
              
@@ -386,7 +386,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
 
     /* ----------------------------------------- deletes and updates all time intervals ----------------------------- */
     dailyDeleteButton.addEventListener('click', async () => {
-        let response = await fetch('http://localhost:5501/dailyTime')
+        let response = await fetch('https://tracker-app-server.vercel.app/dailyTime')
         let dailyTime = await response.json()
  
         // let allEntries = displayEntries.children
@@ -403,7 +403,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
         dailySeconds = 0
         randomNumber = 1
 
-        await fetch(`http://localhost:5501/entries/all/${randomNumber}`, {
+        await fetch(`https://tracker-app-server.vercel.app/entries/all/${randomNumber}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -486,14 +486,14 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
             if (newTimeSeconds > oldTimeSeconds) {
                 let timeDifference = newTimeSeconds - oldTimeSeconds
                 // this is where we will add the time difference to the daily time and it will be daily time plus the newTimeSeconds
-                let response = await fetch('http://localhost:5501/dailyTime')
+                let response = await fetch('https://tracker-app-server.vercel.app/dailyTime')
                 let grabTime = await response.json()
                 newTimeForServer = grabTime[0].time + timeDifference
                 
             } else if (newTimeSeconds < oldTimeSeconds) {
                 let timeDifference = oldTimeSeconds - newTimeSeconds 
                 // this is where we will subtract the time difference to the daily time and it will be newTimeSeconds minus the daily time
-                let response = await fetch('http://localhost:5501/dailyTime')
+                let response = await fetch('https://tracker-app-server.vercel.app/dailyTime')
                 let grabTime = await response.json()
                 newTimeForServer = grabTime[0].time - timeDifference
                 
@@ -508,7 +508,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
                 theTime: newTimeForServer
             }
 
-            fetch('http://localhost:5501/dailyTime/change', {  
+            fetch('https://tracker-app-server.vercel.app/dailyTime/change', {  
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -544,7 +544,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
                 entryTime: editedEntryTime,
             }
 
-            fetch(`http://localhost:5501/entries/${entryUIID}`, {
+            fetch(`https://tracker-app-server.vercel.app/entries/${entryUIID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -587,7 +587,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
                 let oldTimeSeconds = splitOldTime.replace(/^0+|(?<=:0)0+/g, '')
  
                 // updates the time in the UI
-                let response = await fetch('http://localhost:5501/dailyTime')
+                let response = await fetch('https://tracker-app-server.vercel.app/dailyTime')
                 let grabTime = await response.json()
                 // helps us get the correct time to use for the UI
                 let newTimeAfterDeletionForServer = grabTime[0].time - oldTimeSeconds
@@ -603,7 +603,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
                     theTime: newTimeAfterDeletionForServer
                 }
     
-                fetch('http://localhost:5501/dailyTime/change', {  
+                fetch('https://tracker-app-server.vercel.app/dailyTime/change', {  
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -612,7 +612,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
                 })
 
                 // deletes the entry from the server
-                fetch(`http://localhost:5501/entries/${entryUIID}`, {
+                fetch(`https://tracker-app-server.vercel.app/entries/${entryUIID}`, {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json'
@@ -659,7 +659,7 @@ addCategoryForm.addEventListener('submit', async (e) => {
         message.innerText = 'No input was made. Please add a category name.'
     } else {
         // grabs the array of categories and gives us a new id
-        let response = await fetch('http://localhost:5501/categories')
+        let response = await fetch('https://tracker-app-server.vercel.app/categories')
         let categoryData = await response.json()
         let newCategoryID = categoryData.length === 0 ? 1 : categoryData.at(-1).categoryID + 1
 
@@ -668,7 +668,7 @@ addCategoryForm.addEventListener('submit', async (e) => {
             categoryName: addCategoryInput.value,
         }
 
-        fetch('http://localhost:5501/category', {  
+        fetch('https://tracker-app-server.vercel.app/category', {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -700,7 +700,7 @@ deleteCategoryForm.addEventListener('submit', async (e) => {
         alertMessageContainer.classList.remove('hidden')
         message.innerText = 'No option was selected. Please select a category to delete.'
     } else {
-        fetch(`http://localhost:5501/categories/${deleteCategorySelect.value}`, {
+        fetch(`https://tracker-app-server.vercel.app/categories/${deleteCategorySelect.value}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -746,7 +746,7 @@ editCategoryForm.addEventListener('submit', async (e) => {
         categoryName: editCategoryInput.value,
     }
 
-    fetch(`http://localhost:5501/categories/${editCategorySelect.value}`, {
+    fetch(`https://tracker-app-server.vercel.app/categories/${editCategorySelect.value}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -787,7 +787,7 @@ addProjectForm.addEventListener('submit', async (e) => {
         message.innerText = 'No input was made. Please add a project name.'
     } else {
         // grabs the array of project names and gives us a new id
-        let response = await fetch('http://localhost:5501/projects')
+        let response = await fetch('https://tracker-app-server.vercel.app/projects')
         let projectData = await response.json()
         let newProjectID = projectData.length === 0 ? 1 : projectData.at(-1).projectID + 1
 
@@ -796,7 +796,7 @@ addProjectForm.addEventListener('submit', async (e) => {
             projectName: addProjectInput.value,
         }
 
-        fetch('http://localhost:5501/project', {  
+        fetch('https://tracker-app-server.vercel.app/project', {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -828,7 +828,7 @@ deleteProjectForm.addEventListener('submit', async (e) => {
         alertMessageContainer.classList.remove('hidden')
         message.innerText = 'No option was selected. Please select a project name to delete.'
     } else {
-        fetch(`http://localhost:5501/projects/${deleteProjectSelect.value}`, {
+        fetch(`https://tracker-app-server.vercel.app/projects/${deleteProjectSelect.value}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -873,7 +873,7 @@ editProjectForm.addEventListener('submit', async (e) => {
         projectName: editProjectInput.value,
     }
 
-    fetch(`http://localhost:5501/projects/${editProjectSelect.value}`, {
+    fetch(`https://tracker-app-server.vercel.app/projects/${editProjectSelect.value}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -921,7 +921,7 @@ cancelNotes.addEventListener('click', () => {
 // --------------------------------------------------event listener to add a new note
 addNoteForm.addEventListener('submit', async (e) => {
     e.preventDefault()
-    let response = await fetch('http://localhost:5501/notes')
+    let response = await fetch('https://tracker-app-server.vercel.app/notes')
     let noteData = await response.json()
 
     let newID = noteData.length === 0 ? 1 : noteData.at(-1).noteID + 1
@@ -939,7 +939,7 @@ addNoteForm.addEventListener('submit', async (e) => {
     addNewNoteToServer(newNote)
 
     async function addNewNoteToServer(newNote) {
-        fetch('http://localhost:5501/note', {
+        fetch('https://tracker-app-server.vercel.app/note', {
             method: 'POST',
             headers: {
         'Content-Type': 'application/json'
@@ -984,7 +984,7 @@ function createNewNote(newNote) {
 
     // ------------------------------------------ delete a note function ---------------------------------------------------------------------------------
     removeNoteButton.addEventListener('click', async () => {
-        fetch(`http://localhost:5501/notes/${newNote.noteID}`, {
+        fetch(`https://tracker-app-server.vercel.app/notes/${newNote.noteID}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
