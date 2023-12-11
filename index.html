@@ -7,7 +7,35 @@
     <script src="https://kit.fontawesome.com/e5ff2f4c45.js" crossorigin="anonymous"></script>
     <title>Tracking App</title>
 </head>
-<body class="m-4 bg-slate-100">
+<body class="m-4 bg-slate-100 static overflow-x-hidden">
+ 
+    <!-- creates note section -->
+    <div class="notesContainer absolute bg-white shadow-md rounded-md z-30 w-0 right-[-100%] h-5/6 bottom-4 top-4 p-4 transition-width duration-500 ease-in-out overflow-auto border-2 border-emerald-400 w-0">
+        <!-- <div class="notesContainer absolute bg-slate-50 shadow-md rounded-md z-30 right-3 w-3/4 h-5/6 bottom-4 top-4 p-4 border-2 border-emerald-400"> -->
+        <!-- cancel button -->
+        <button class="cancelNotes float-right">
+            <i class="fa-solid fa-circle-xmark text-emerald-400 text-xl hover:text-emerald-600"></i> 
+        </button>
+
+        <h1 class="text-center font-bold uppercase text-emerald-600">Notes</h1>
+
+        <form class="addNoteForm mt-8">
+            <div class="flex justify-between">
+                <div class="basis-9/12">
+                    <input class="addNoteInput border-b-2 border-emerald-400 bg-inherit ring-black p-1 w-full my-4 py-2 pt-2 mt-1 outline-none" type="text" placeholder="Note..."/>
+                </div>
+
+                <div class="basis-2/12">
+                    <input class="ring-2 ring-emerald-400 py-1 px-4 rounded-md text-emerald-400 hover:bg-emerald-400 hover:text-emerald-50 mt-3 float-right" type="submit" value="Add"/>
+                </div>
+            </div>
+        </form>
+
+        <ul class="displayNotes"></ul>
+    </div>
+
+
+
     <!-- title, timer, play, and stop buttons -->
     <div class="flex justify-between">
 
@@ -80,7 +108,7 @@
     </div> -->
 
     <!-- category and project name edit buttons and edit entries -->
-    <div class="flex flex-wrap">
+    <div class="flex">
 
         <div class="basis-10/12">
             <!-- weekly total timer -->
@@ -95,13 +123,17 @@
 
         <div class="basis-1/12">
             <div class="float-right">
-                <div class="flex">
+                <div class="flex justify-between">
                     <div class="">
-                        <button><i class="fa-solid fa-table-columns categories static text-xl text-emerald-400 mr-5 hover:text-emerald-600"></i></button>
+                        <button><i class="fa-solid fa-table-columns categories static text-xl text-emerald-400 hover:text-emerald-600"></i></button>
                     </div>
                     
-                    <div class="float-right">
+                    <div class="">
                         <button><i class="projects fa-solid fa-file-pen text-xl text-emerald-400 ml-4 hover:text-emerald-600"></i></button>
+                    </div>
+
+                    <div class="float-right">
+                        <button><i class="notesButton fa-regular fa-note-sticky text-xl text-emerald-400 ml-4 hover:text-emerald-600"></i></button>
                     </div>
                 </div>
             </div>

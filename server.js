@@ -8,32 +8,14 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-  // - Testing variable for temp time entries -
-// let entries = [
-   
-//     {  
-//         entryID: 1, 
-//         entryTitle: 'working on designs', 
-//         entryDate: '11/26/2023',
-//         entryProject: 'Adobe Developer Team',
-//         entryCategory: 'Work',
-//         entryTime: '00:02:00',
-//     },
-//     {
-//         entryID: 2,
-//         entryTitle: 'working on designs',
-//         entryDate: '11/27/2023',
-//         entryProject: 'Adobe Developer Team',
-//         entryCategory: 'Work',
-//         entryTime: '00:01:00',
-//     },
-// ]
+
+let notes = []
 
 let dailyTotalTime = [
     {
         time: 0
     },
-]
+] 
 
 let entries = []
 
@@ -58,6 +40,12 @@ let projects = [
         projectName: 'Adobe Developer Team' 
     },
 ]
+
+// Get all entries, categories, and project names
+app.get('/notes', (req, res) => {
+    res.send(notes)
+    // console.log("its working")
+})
 
 // Get all entries, categories, and project names
 app.get('/entries', (req, res) => {
@@ -96,7 +84,7 @@ app.post('/entry', (req, res) => {
  
     entries = [...entries, newEntry]
     res.send(entries)
-    console.log(entries) 
+    // console.log(entries) 
 }) 
 
 app.post('/dailyTime', (req, res) => {
@@ -114,7 +102,7 @@ app.get('/dailyTime', (req, res) => {
 app.post('/dailyTime/change', (req, res) => {
     let timeToChange = parseInt(req.body.theTime)
     dailyTotalTime[0].time = timeToChange
-    console.log(timeToChange)
+    // console.log(timeToChange)
     res.send(dailyTotalTime)
 })
 
@@ -127,7 +115,7 @@ app.post('/category', (req, res) => {
  
     categories = [...categories, newCategory]
     res.send(categories)
-    console.log(categories)  
+    // console.log(categories)  
 })
 
 // delete reauest to delete a category
@@ -137,7 +125,7 @@ app.delete('/categories/:categoryID', (req, res) => {
 
     categories = [...newCategories]
 
-    console.log(categories) 
+    // console.log(categories) 
     res.send(categories)   
 })
 
@@ -147,7 +135,7 @@ app.put('/categories/:categoryID', (req, res) => {
 
     categories.find(category => category.categoryID == categoryToUpdate).categoryName = req.body.categoryName
 
-    console.log(categories)
+    // console.log(categories)
     res.send(categories)
 })
 
@@ -160,7 +148,7 @@ app.post('/project', (req, res) => {
  
     projects = [...projects, newProject]
     res.send(projects)
-    console.log(projects)  
+    // console.log(projects)  
 })
 
 // delete request to delete a project name
@@ -170,17 +158,17 @@ app.delete('/projects/:projectID', (req, res) => {
 
     projects = [...newProjects]
 
-    console.log(projects) 
+    // console.log(projects) 
     res.send(projects)   
 })
-
+ 
 // put request to update a project name
 app.put('/projects/:projectID', (req, res) => {
     let projectToUpdate = parseInt(req.params.projectID)
 
     projects.find(project => project.projectID == projectToUpdate).projectName = req.body.projectName
 
-    console.log(projects) 
+    // console.log(projects) 
     res.send(projects)
 })
 
@@ -199,16 +187,16 @@ app.put('/entries/:entryID', (req, res) => {
         entryDate: req.body.entryDate, 
         entryProject:  turnProjectToNumber,
         entryCategory: turnCategoryToNumber, 
-        entryTime: req.body.entryTime,
-    
-    }
+        entryTime: req.body.entryTime, 
+      
+    }  
 
     let entryWereReplacing = entries.find(entry => entry.entryID == entryToUpdate)
-    entryWereReplacing = newEntry
-    
+    entryWereReplacing = newEntry   
+     
 
-    console.log(entryWereReplacing) 
-    res.send(entries)
+    // console.log(entryWereReplacing)  
+    res.send(entries) 
 })
 
 // delete request to delete an entry
@@ -230,6 +218,30 @@ app.delete('/entries/all/:entryID', (req, res) => {
     entries = []
     
     res.send(console.log(entries))
+})
+
+// Post request to add new note
+app.post('/note', (req, res) => {
+    let newNote = {
+        noteID: req.body.noteID, 
+        note: req.body.note,
+    }
+ 
+    notes = [...notes, newNote]  
+    res.send(notes)
+    // console.log(notes)  
+}) 
+ 
+// delete request to delete a note
+app.delete('/notes/:noteID', (req, res) => {
+    let noteToDelete = parseInt(req.params.noteID)
+
+    let newNotes = notes.filter(note => note.noteID != noteToDelete)
+    
+    notes = [...newNotes] 
+    // console.log(notes)
+
+    res.send(notes)
 })
  
 app.listen(port, () => {

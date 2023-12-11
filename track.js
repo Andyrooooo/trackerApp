@@ -41,12 +41,18 @@ let deleteAlertMessageContainer = document.querySelector('.deleteAlertMessageCon
 let deleteMessage = document.querySelector('.deleteMessage')
 let deleteAlert = document.querySelector('.deleteAlert')
 let cancelDeleteAlert = document.querySelector('.cancelDeleteAlert')
+let notesContainer = document.querySelector('.notesContainer')
+let notesButton = document.querySelector('.notesButton')
+let cancelNotes = document.querySelector('.cancelNotes')
+let addNoteForm = document.querySelector('.addNoteForm')
+let addNoteInput = document.querySelector('.addNoteInput')
+let displayNotes = document.querySelector('.displayNotes')
 /* ------------------------------------ end of element creations -------------------------------------------------- */
 
 
 // showEntries()
-grabCategories()
-grabProjects() 
+
+// let notes = []
 
 
 /* -------------------------- category options ---------------------------  */
@@ -107,6 +113,8 @@ let seconds = 0
 let dailySeconds = 0
 let weeklySeconds = 0
 checkDate()
+grabCategories()
+grabProjects() 
 let totalDailyTime
 
 
@@ -349,7 +357,7 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
             let dailyCollapseButtonContainer = document.createElement("div")
             dailyCollapseButtonContainer.appendChild(dailyCollapseButton)
             dailyCollapseButtonContainer.classList.add('basis-1/12')
-            dailyCollapseButton.classList.add('fa-solid', 'fa-chevron-up', 'float-right', 'text-xl', 'hover:text-emerald-200', 'hidden')
+            dailyCollapseButton.classList.add('up','fa-solid', 'fa-chevron-up', 'float-right', 'text-xl', 'hover:text-emerald-200', 'rotate-180', 'transition-transform', 'duration-200', 'ease-in-out')
 
             // MORE appends
             dailyInfoBar.appendChild(dailyDateContainer)
@@ -405,17 +413,20 @@ function createNewEntry(newEntry, projectName, categoryName, entryData) {
     })
 
 
-    /* ------------------------------------------ hides all entries ----------------------------------------------- */
+    /* ------------------------------------------ hide and reveal entries ----------------------------------------------- */
     dailyCollapseButton.addEventListener('click', () => {
- 
-        let children = document.querySelectorAll(`li`)
+        if (dailyCollapseButton.classList.contains('up')) {
 
-        if (entryDateForExistingEntries) {
-            for (let i = 0; i < children.length; i++) {
-                children[i].classList.toggle('hidden');
+            dailyCollapseButton.classList.toggle('rotate-180')
+    
+            let children = document.querySelectorAll(`li`)
+
+            if (entryDateForExistingEntries) {
+                for (let i = 0; i < children.length; i++) {
+                    children[i].classList.toggle('hidden');
+                }
             }
         }
-
     })
 
 
@@ -894,8 +905,95 @@ editProjectForm.addEventListener('submit', async (e) => {
 })
 
 
+// gives us animation for the form to slide out
+notesButton.addEventListener('click', () => {
+    notesContainer.classList.remove('w-0', 'right-[-100%]')
+    notesContainer.classList.add('w-4/6', 'right-3')
+})
+
+cancelNotes.addEventListener('click', () => {
+    notesContainer.classList.remove('w-4/6', 'right-3')
+    notesContainer.classList.add('w-0', 'right-[-100%]')
+})
 
 
+
+// --------------------------------------------------event listener to add a new note
+addNoteForm.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    let response = await fetch('http://localhost:5501/notes')
+    let noteData = await response.json()
+
+    let newID = noteData.length === 0 ? 1 : noteData.at(-1).noteID + 1
+    
+    
+    // console.log(newID)
+
+    let newNote = {
+        noteID: newID,
+        note: addNoteInput.value
+    }
+
+    // createNewNote(newNote)
+       
+    addNewNoteToServer(newNote)
+
+    async function addNewNoteToServer(newNote) {
+        fetch('http://localhost:5501/note', {
+            method: 'POST',
+            headers: {
+        'Content-Type': 'application/json'
+        },
+            body: JSON.stringify(newNote)
+        })
+        .then(() => {
+            createNewNote(newNote)
+        })
+    }
+})
+    
+function createNewNote(newNote) {
+    // list item
+    let noteLI = document.createElement("li")
+    noteLI.classList.add('bg-white', 'shadow-md', 'p-4', 'my-4', 'rounded-md', 'flex', 'justify-between')
+
+    // note input
+    let noteP = document.createElement("input")
+    noteP.setAttribute('readonly', true)
+    noteP.classList.add('w-full', 'outline-none', 'bg-inherit')
+    let displayedNoteContainer = document.createElement("div")
+    displayedNoteContainer.classList.add('basis-11/12')
+    noteP.value = newNote.note
+
+    // delete button
+    let removeNoteButtonContainer = document.createElement("div")
+    removeNoteButtonContainer.classList.add('basis-1/12')
+    let removeNoteButton = document.createElement("button")
+    removeNoteButton.classList.add('fa-solid', 'fa-trash', 'text-xl', 'hover:text-red-500', 'float-right')
+
+    //appends
+    removeNoteButtonContainer.appendChild(removeNoteButton)
+    displayedNoteContainer.appendChild(noteP)
+    noteLI.appendChild(displayedNoteContainer)
+    noteLI.appendChild(removeNoteButtonContainer)
+    displayNotes.appendChild(noteLI)
+
+    // notes = [...notes, newNote]
+
+    addNoteInput.value = ''
+
+    // ------------------------------------------ delete a note function ---------------------------------------------------------------------------------
+    removeNoteButton.addEventListener('click', async () => {
+        fetch(`http://localhost:5501/notes/${newNote.noteID}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        // console.log(newNote.noteID)
+        noteLI.remove()
+    })
+}
 
 
 
